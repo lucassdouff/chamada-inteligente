@@ -1,10 +1,10 @@
 const mysql = require('mysql2')
 const connection = mysql.createConnection({
   host: 'localhost',
-  user: 'usuario',
-  password: 'usuario',
+  user: 'root',
+  password: 'root',
   port: 3306,
-  database: 'chamada_inteligente_db'
+  database: 'CHAMADA_INTELIGENTE_DB'
 })
 
 connection.connect()
