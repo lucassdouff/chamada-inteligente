@@ -1,9 +1,24 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import ClassBoxComponent from "../components/ClassBoxComponent";
 
 export default function HomeScreen() {
     return(
-        <View className="flex-1 justify-center items-center">
-            <Text>Página Home</Text>
+        <View className="w-full py-2 px-4 mt-2">
+            <ClassBoxComponent 
+                codigoTurma="TCC00315"
+                nomeTurma="Laboratório"
+                semestre="2023/2"
+            />
+            <ClassBoxComponent 
+                codigoTurma="TCC00315"
+                nomeTurma="Laboratório"
+                semestre="2023/2"
+            />
+            <ClassBoxComponent 
+                codigoTurma="TCC00315"
+                nomeTurma="Laboratório"
+                semestre="2023/2"
+            />
         </View>
     );
 }
