@@ -1,0 +1,12 @@
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { HomeNavigation } from "./Home/HomeNavigation";
+import { NotificationsNavigation } from "./Notifications/NotificationsNavigation";
+
+const Drawer = createDrawerNavigator();
+
+export default (props: any) => (
+    <Drawer.Navigator screenOptions={{ headerShown: false }}>
+        <Drawer.Screen name="Suas turmas" component={HomeNavigation} />
+        <Drawer.Screen name="Notificações" component={NotificationsNavigation} />
+    </Drawer.Navigator>
+);

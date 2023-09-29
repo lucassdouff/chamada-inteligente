@@ -12,4 +12,4 @@ export default function FormInputComponent({ label, placeholder }: FormInputComp
             <TextInput underlineColorAndroid="transparent" className="px-2 py-0.5 border border-gray-400 rounded" placeholder={placeholder} />
         </View>
     )
-}
+} 
