@@ -12,10 +12,12 @@ app.use((req, res, next) => {
 
 
 const userRoute = require("./routes/user.routes");
+const departamentoRoute = require("./routes/departamento.routes");
 const departmentRoute = require("./routes/department.routes");
 
 app.get('/', (req, res) => res.send('Hello World!'));
 app.get('/user', userRoute);
+app.get('/departamento', departamentoRoute);
 app.delete('/department/:id', departmentRoute)
 
 app.listen(port, () => console.log(`Express app running on port ${port}!`));
