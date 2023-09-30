@@ -6,7 +6,7 @@ const Drawer = createDrawerNavigator();
 
 export default (props: any) => (
     <Drawer.Navigator screenOptions={{ headerShown: false }}>
-        <Drawer.Screen name="Suas turmas" component={HomeNavigation} />
+        <Drawer.Screen name="Turmas" component={HomeNavigation} />
         <Drawer.Screen name="Notificações" component={NotificationsNavigation} />
     </Drawer.Navigator>
 );

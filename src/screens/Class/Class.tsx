@@ -1,6 +1,6 @@
 import { Button, Text, View } from "react-native";
 
-export default function ClassroomScreen() {
+export default function ClassScreen() {
     return(
         <View className="flex-col gap-4 justify-center px-3 py-5">
             <View>
