@@ -2,7 +2,22 @@ const sequelize = require('../util/database');
 const { User, Student, Teacher } = require('../models/models');
 
 
+exports.addTeacher = async (req, res, next) => {
+  const {password, email, name, id_department} = req.body;
+  try {
+    const userId = await addUser({email,name,password});
 
+    if(userId === -1) return res.status(409).json({error: "Email already in use"});
+
+    const id_teacher = userId[0][0].lastId;
+    const teacher = await Teacher.create({id_teacher,id_department, confirmed: false});
+    
+    res.status(200).json(teacher)
+
+  } catch {
+    res.status(500).json({error: 'An error occurred while creating the user'});
+  }
+}
 
 exports.addStudent = async (req, res, next) => {
   const {password, email, name, enrollment, id_course} = req.body;
