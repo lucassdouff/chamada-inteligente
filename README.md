@@ -16,4 +16,4 @@ Onde:
 ## Commits:
 Todo commit deve seguir o seguinte padrão:
 
-git commit -m "@{Nº de card} - {Descrição do commit}"
+git commit -m "#{Nº de card} - {Descrição do commit}"
