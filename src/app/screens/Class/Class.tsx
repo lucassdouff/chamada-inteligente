@@ -1,4 +1,5 @@
 import { Button, Text, View } from "react-native";
+import ButtonComponent from "../../../components/ButtonComponent";
 
 export default function ClassScreen() {
     return(
@@ -13,8 +14,9 @@ export default function ClassScreen() {
                 <Text>Percentual de faltas na disciplina: 30%</Text>
                 <Text>Tempo médio que esteve presente na disciplina: 45min</Text>
             </View>
-            <View className="self-center">
-                <Button title="Indicar Presença" />
+            <View className="w-full self-center">
+                <ButtonComponent action={() => {}} color='blue' title={"INDICAR PRESENÇA"}                    
+                />
             </View>
         </View>
     );
