@@ -3,7 +3,7 @@ import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { View } from "react-native";
 import { Icon } from "react-native-elements";
 import { createStackNavigator } from "@react-navigation/stack";
-import NotificationScreen from "../../screens/Notification/Notifications";
+import NotificationScreen from "../../../screens/Notifications/Notifications";
 
 const Stack = createStackNavigator();
 

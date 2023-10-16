@@ -2,9 +2,9 @@ import { useNavigation, DrawerActions } from "@react-navigation/core";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { View } from "react-native";
 import { Icon } from "react-native-elements";
-import ClassScreen from "../../screens/Class/Class";
-import HomeScreen from "../../screens/Home/Home";
 import { createStackNavigator } from "@react-navigation/stack";
+import ClassScreen from "../../../screens/Class/Class";
+import HomeScreen from "../../../screens/Home/Home";
 
 const Stack = createStackNavigator();
 

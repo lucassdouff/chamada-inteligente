@@ -9,12 +9,12 @@ export default function LoginScreen() {
 
     return(
         <View className="w-full flex-1 p-4 justify-center">
-            <Image className="self-center mb-10" source={require('../../../assets/logoIdUFF.png')} style={{width: 150, height: 150}}/>
+            <Image className="self-center mb-10" source={require('../../../assets/logoIdUFF.png')} style={{width: 140, height: 150}}/>
             <Text className="self-center mb-10 text-xl">Acesso aos sistemas da UFF</Text>
             <FormInputComponent label="Identificação (idUFF)" placeholder="CPF, email, passaporte" />
             <FormInputComponent label="Senha"  />
             <Button title="ACESSAR" onPress={() => {
-                navigation.navigate('Drawer');
+                navigation.navigate('StudentDrawer');
             }} />
         </View>
     )
