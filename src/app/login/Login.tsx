@@ -2,6 +2,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Button, Text, View, Image } from "react-native";
 import FormInputComponent from "../../components/FormInputComponent";
 import { useNavigation } from "@react-navigation/native";
+import ButtonComponent from '../../components/ButtonComponent';
 
 export default function LoginScreen() {
 
@@ -13,9 +14,10 @@ export default function LoginScreen() {
             <Text className="self-center mb-10 text-xl">Acesso aos sistemas da UFF</Text>
             <FormInputComponent label="Identificação (idUFF)" placeholder="CPF, email, passaporte" />
             <FormInputComponent label="Senha"  />
-            <Button title="ACESSAR" onPress={() => {
+            <ButtonComponent action={() => {
                 navigation.navigate('StudentDrawer');
-            }} />
+            }} color={'blue'} title={'ACESSAR'}                
+            />
         </View>
     )
 }
