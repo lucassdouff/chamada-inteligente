@@ -12,3 +12,17 @@ exports.createAttendanceRoll = (req,res,next) =>{
 
     return res.status(200).json(attendanceRoll);
 }
+
+exports.deleteAttendanceRoll = (req, res, next) => {
+    const { id } = req.params; 
+    Attendance_roll.destroy({
+        where: { id },
+    })
+    .then(() => {
+        res.status(204).send();
+    })
+    .catch((error) => {
+        console.error(error);
+        res.status(500).json({ error: 'Erro ao excluir o attendanceRoll' });
+    });
+}
