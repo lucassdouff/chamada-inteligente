@@ -1,5 +1,5 @@
 import { Button, Text, View } from "react-native";
-import ButtonComponent from "../../../components/ButtonComponent";
+import ButtonComponent from "../../../../components/ButtonComponent";
 
 export default function ClassScreen() {
     return(

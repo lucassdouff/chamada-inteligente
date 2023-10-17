@@ -3,21 +3,23 @@ import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { View } from "react-native";
 import { Icon } from "react-native-elements";
 import { createStackNavigator } from "@react-navigation/stack";
-import NotificationScreen from "../../../screens/Notifications/Notifications";
+import HomeScreen from "../../../screens/teacher/Home/Home";
+import ClassScreen from "../../../screens/teacher/Class/Class";
 
 const Stack = createStackNavigator();
 
-export function NotificationsNavigation() {
+export function HomeNavigation() {
 
     const navigation = useNavigation<DrawerNavigationProp<any>>();
 
     return(
         <Stack.Navigator screenOptions={{headerShown: true}}>
-            <Stack.Screen name="NotificationScreen" component={NotificationScreen} options={{title: "Notificações", headerLeft: () => (
+            <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ title: "Turmas", headerLeft: () => (
                 <View style={{ margin: 10 }}>
                     <Icon name="menu" size={20} color={'#000'} onPress={() => navigation.dispatch(DrawerActions.openDrawer())} />
                 </View>
             )}} />
+            <Stack.Screen name="Turma" component={ClassScreen} />
         </Stack.Navigator>
     );
 }

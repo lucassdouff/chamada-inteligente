@@ -3,8 +3,8 @@ import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { View } from "react-native";
 import { Icon } from "react-native-elements";
 import { createStackNavigator } from "@react-navigation/stack";
-import HomeScreen from "../../../screens/Home/Home";
-import ClassScreen from "../../../screens/Class/Class";
+import ClassScreen from "../../../screens/student/Class/Class";
+import HomeScreen from "../../../screens/student/Home/Home";
 
 const Stack = createStackNavigator();
 
