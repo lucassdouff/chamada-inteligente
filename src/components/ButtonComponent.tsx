@@ -34,8 +34,8 @@ export default function ButtonComponent({action, disabled, color, title}: Button
 
     return (
         <TouchableHighlight disabled={disabled} onPress={action}>
-            <View className={'w-full flex items-center px-2 py-3 rounded-sm' + btnColor}>
-                <Text className="text-white text-lg">{title}</Text>
+            <View className={'w-full flex items-center px-3 py-2 rounded-sm' + btnColor}>
+                <Text className="text-white text-base">{title}</Text>
             </View>
         </TouchableHighlight>
     )

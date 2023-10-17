@@ -15,7 +15,7 @@ export default function LoginScreen() {
             <FormInputComponent label="Identificação (idUFF)" placeholder="CPF, email, passaporte" />
             <FormInputComponent label="Senha"  />
             <ButtonComponent action={() => {
-                navigation.navigate('StudentDrawer');
+                navigation.navigate('TeacherDrawer');
             }} color={'blue'} title={'ACESSAR'}                
             />
         </View>

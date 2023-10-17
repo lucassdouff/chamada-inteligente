@@ -10,7 +10,7 @@ interface TableComponentProps {
 export default function TableComponent({ tableData } : TableComponentProps) {
 
     return (
-        <View>
+        <View className="w-full">
             <ScrollView horizontal={true}>
                 <View className="flex-col border divide-y"> 
                     {
@@ -22,7 +22,7 @@ export default function TableComponent({ tableData } : TableComponentProps) {
                                             {
                                                 item.action ? 
                                                 <TouchableWithoutFeedback onPress={item.action}>
-                                                    <Text className="w-24 py-2 px-2.5 text-center">{item.text}</Text>
+                                                    <Text className="w-24 py-2 px-2.5 text-center underline">{item.text}</Text>
                                                 </TouchableWithoutFeedback>
                                                 : <Text className="w-24 py-2 px-2.5 text-center">{item.text}</Text>
                                             }

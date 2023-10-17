@@ -5,6 +5,9 @@ import { Icon } from "react-native-elements";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../../../screens/teacher/Home/Home";
 import ClassScreen from "../../../screens/teacher/Class/Class";
+import ManageClassScreen from "../../../screens/teacher/ManageClass/ManageClass";
+import ManageCallsScreen from "../../../screens/teacher/ManageCalls/ManageCalls";
+import ManageCurrentCallScreen from "../../../screens/teacher/ManageCurrentCall/ManageCurrentCall";
 
 const Stack = createStackNavigator();
 
@@ -20,6 +23,9 @@ export function HomeNavigation() {
                 </View>
             )}} />
             <Stack.Screen name="Turma" component={ClassScreen} />
+            <Stack.Screen name="Gerenciar Turma" component={ManageClassScreen} />
+            <Stack.Screen name="Gerenciar Chamadas" component={ManageCallsScreen} />
+            <Stack.Screen name="Gerenciar Chamada" component={ManageCurrentCallScreen} />
         </Stack.Navigator>
     );
 }
