@@ -3,9 +3,9 @@ const { User, Student, Teacher } = require('../models/models');
 
 
 exports.addTeacher = async (req, res, next) => {
-  const {password, email, name, id_department} = req.body;
+  const {password, email, name, cpf, id_department} = req.body;
   try {
-    const userId = await addUser({email,name,password});
+    const userId = await addUser({email,name,password,cpf});
 
     if(userId === -1) return res.status(409).json({error: "Email already in use"});
 
@@ -20,9 +20,9 @@ exports.addTeacher = async (req, res, next) => {
 }
 
 exports.addStudent = async (req, res, next) => {
-  const {password, email, name, enrollment, id_course} = req.body;
+  const {password, email, name, enrollment, id_course, cpf} = req.body;
   try {
-    const userId = await addUser({email,name,password});
+    const userId = await addUser({email,name,password, cpf});
 
     if(userId === -1) return res.status(402).json({error: "Email already in use"});
 
@@ -62,7 +62,7 @@ exports.login = async (req, res, next) => {
 
 
 
-const addUser = async ({email, name, password}) => {
+const addUser = async ({email, name, password,cpf}) => {
   try {
     const salt = Math.floor(Math.random() * 10000);
     const prevUser = await User.findOne({
@@ -73,7 +73,7 @@ const addUser = async ({email, name, password}) => {
 
     if(prevUser) return -1;
 
-    await sequelize.query(`insert into user (email,name,password,salt) values ('${email}','${name}',SHA(CONCAT('${password}','${salt}')),'${salt}');`)
+    await sequelize.query(`insert into user (email,name,password,cpf,salt) values ('${email}','${name}',SHA(CONCAT('${password}','${salt}')),'${cpf}','${salt}');`)
     const res = await sequelize.query("SELECT LAST_INSERT_ID() AS lastId");
     return res;
 

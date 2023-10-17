@@ -57,6 +57,10 @@ const User = database.define('user', {
         type: Sequelize.STRING,
         allowNull: false,
     },
+    cpf: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
     password: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -116,5 +120,71 @@ const Student = database.define('student', {
     }
 },opts);
 
+const Class = database.define('class',{
+    id_class:{
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    name :{
+        type:Sequelize.STRING,
+        allowNull: false
+    },
+    class_schedule: {
+        type: Sequelize.TIME,
+        allowNull: false
+    },
+    code: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    duration: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+    },
+    semester: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    id_teacher:{
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references:{
+            model: 'teacher',
+            key: 'id_teacher'
+        }
+    },
+    id_course:{
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        reference: {
+            model: 'course',
+            key: 'id_course'
+        }
+    }
+},opts)
 
-module.exports = {Department, User, Teacher, Student, Course};
+const Class_Student = database.define('class_student', {
+    id_class: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        allowNull: false,
+        references: {
+            model: 'class',
+            key: 'id_class'
+        }
+    },
+    id_student: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        allowNull: false,
+        references: {
+            model: 'student',
+            key: 'id_student'
+        }
+    }
+},opts)
+
+
+module.exports = {Department, User, Teacher, Student, Course, Class, Class_Student};
