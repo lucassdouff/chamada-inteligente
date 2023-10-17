@@ -24,9 +24,11 @@ app.use((req, res, next) => {
 
 
 const userRoute = require("./routes/user.routes");
+const classRoute = require("./routes/class.routes");
 
 
 app.use('/user', userRoute);
+app.use('/class', classRoute);
 
 
 app.listen(port, () => console.log(`Express app running on port ${port}!`));
