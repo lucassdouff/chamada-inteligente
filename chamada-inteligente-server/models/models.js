@@ -184,7 +184,63 @@ const Class_Student = database.define('class_student', {
             key: 'id_student'
         }
     }
-},opts)
+},opts);
+
+const Attendance_roll = database.define('attendance_roll', {
+    id_attendance_roll: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        allowNull: false,
+        autoIncrement: true
+    },
+    id_class: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+            model: "class",
+            key: 'id_class'
+        }
+    }
+    ,
+    datetime: {
+        type: Sequelize.DATE,
+        allowNull: false
+    }
+}, opts);
+
+const Attendance = database.define('attendance', {
+    id_attendance :{
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        allowNull: false,
+        autoIncrement: true,
+    },
+    hour: {
+        type: Sequelize.TIME,
+    },
+    validation: {
+        type: Sequelize.BOOLEAN
+    },
+    medical_certificate: {
+        type: Sequelize.STRING
+    },
+    id_attendance_roll :{
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'attendance_roll',
+            key: 'id_attendance_roll'
+        }
+    },
+    id_student:{
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references:{
+            model: 'student',
+            key: 'id_student'
+        }
+    }
+}, opts);
 
 
-module.exports = {Department, User, Teacher, Student, Course, Class, Class_Student};
+module.exports = {Department, User, Teacher, Student, Course, Class, Class_Student, Attendance_roll, Attendance};
