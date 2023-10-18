@@ -26,11 +26,17 @@ app.use((req, res, next) => {
 const userRoute = require("./routes/user.routes");
 const classRoute = require("./routes/class.routes");
 const attendanceRollRoute = require("./routes/attendanceRoll.routes");
+const departmentRoute = require("./routes/department.routes");
+const courseRoute = require("./routes/course.routes");
+const attendanceRoute = require("./routes/attendance.routes");
 
 
 app.use('/user', userRoute);
 app.use('/class', classRoute);
 app.use('/attendanceRoll',attendanceRollRoute);
+app.use('/department', departmentRoute);
+app.use('/course', courseRoute);
+app.use('/attendance', attendanceRoute);
 
 
 app.listen(port, () => console.log(`Express app running on port ${port}!`));
