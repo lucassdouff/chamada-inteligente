@@ -18,3 +18,18 @@ exports.createAttendance = async(req, res, next) => {
         res.status(500).json({error: "An error occurred while adding a attendance"});
     } 
 }
+
+exports.getAllAttendances = (req, res, next) => {
+  const { attendanceRollId } = req.params;
+
+  Attendance.findAll({
+    where: { id_attendance_roll: attendanceRollId },
+  })
+    .then((attendances) => {
+      res.status(200).json(attendances);
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).json({ error: 'Erro ao buscar as presenças' });
+    });
+};
