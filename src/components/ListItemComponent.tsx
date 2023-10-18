@@ -1,9 +1,9 @@
 import { View, Text, TouchableWithoutFeedback, Image } from "react-native";
-import { ListDataType } from "../core/models/ListDataType";
+import { ListDataModel } from "../core/models/ListDataModel";
 
 interface ListItemComponentProps {
 
-    itemData: ListDataType;
+    itemData: ListDataModel;
 }
 
 

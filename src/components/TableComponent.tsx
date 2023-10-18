@@ -1,10 +1,10 @@
 import React from "react";
 import { ScrollView, View, Text } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import { TableDataType } from "../core/models/TableDataType";
+import { TableDataModel } from "../core/models/TableDataModel";
 
 interface TableComponentProps {
-    tableData: TableDataType[][];
+    tableData: TableDataModel[][];
 }
 
 export default function TableComponent({ tableData } : TableComponentProps) {
