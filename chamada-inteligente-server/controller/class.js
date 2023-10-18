@@ -1,5 +1,5 @@
 const sequelize = require('../util/database');
-const { Class, Class_Student } = require('../models/models'); 
+const { Class, Class_Student, Class_Weekday } = require('../models/models'); 
 
 exports.getClasses = async (req, res, next) => {
     const {id, role} = req.body
@@ -58,8 +58,6 @@ exports.assignStudent = async(req,res,next) => {
     }
 }
 
-const { Class } = require('../models/models');
-
 exports.editClass = async (req, res, next) => {
   const classId = req.params.id;
   const { name, class_schedule, code, duration, semester, id_teacher, id_course } = req.body;
@@ -87,3 +85,33 @@ exports.editClass = async (req, res, next) => {
     res.status(500).json({ error: 'Ocorreu um erro ao atualizar a turma' });
   }
 };
+
+
+exports.removeClass = async (req, res, next) => {
+    const { id } = req.params;
+
+    try {
+
+    await Class_Weekday.destroy({
+        where: {
+            id_class: id
+        }
+    });
+
+    await Class_Student.destroy({
+        where: {
+            id_class: id
+        }
+    });
+
+    await Class.destroy({
+        where: {
+            id_class: id
+        }
+    })
+
+    return res.status(204).json({message: "Successfuly deleted Class"});
+    } catch {
+        res.status(500).json({error: "An error occurred while deleting the class"});
+    }
+}

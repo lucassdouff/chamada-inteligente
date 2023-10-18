@@ -165,6 +165,31 @@ const Class = database.define('class',{
     }
 },opts)
 
+const Class_Weekday = database.define('class_weekday', {
+    id_class: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        allowNull: false,
+        references: {
+            model: 'class',
+            key: 'id_class'
+        }
+    },
+    weekday: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        allowNull: false,
+    },
+    duration: {
+        type: Sequelize.INTEGER,
+        allowNull: false, 
+    },
+    start_hour: {
+        type: Sequelize.TIME,
+        allowNull: false,
+    }
+});
+
 const Class_Student = database.define('class_student', {
     id_class: {
         type: Sequelize.INTEGER,
@@ -184,7 +209,7 @@ const Class_Student = database.define('class_student', {
             key: 'id_student'
         }
     }
-},opts);
+}, opts);
 
 const Attendance_roll = database.define('attendance_roll', {
     id_attendance_roll: {
@@ -243,4 +268,4 @@ const Attendance = database.define('attendance', {
 }, opts);
 
 
-module.exports = {Department, User, Teacher, Student, Course, Class, Class_Student, Attendance_roll, Attendance};
+module.exports = {Department, User, Teacher, Student, Course, Class, Class_Student, Attendance_roll, Attendance, Class_Weekday};
