@@ -19,17 +19,22 @@ exports.createAttendance = async(req, res, next) => {
     } 
 }
 
-exports.getAllAttendances = (req, res, next) => {
+exports.getAllAttendances = async (req, res, next) => {
   const { attendanceRollId } = req.params;
 
-  Attendance.findAll({
-    where: { id_attendance_roll: attendanceRollId },
-  })
-    .then((attendances) => {
-      res.status(200).json(attendances);
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).json({ error: 'Erro ao buscar as presenças' });
+  try {
+    const attendances = await Attendance.findAll({
+      where: {
+        id_attendance_roll: attendanceRollId,
+        hour: {
+          [DATE.lte]: new Date(),
+        },
+      },
     });
+
+    res.status(200).json(attendances);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao buscar as chamadas abertas' });
+  }
 };
