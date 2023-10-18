@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
-import TableComponent from "../../../../components/TableComponent";
-import ButtonComponent from "../../../../components/ButtonComponent";
+import TableComponent from "../../../../components/Tables/TableComponent";
+import ButtonComponent from "../../../../components/Buttons/ButtonComponent";
 
 export default function ManageCallsScreen() {
     return(

@@ -1,5 +1,5 @@
 import { Text, View } from "react-native";
-import NotificationCardComponent from "../../../../components/NotificationCardComponent";
+import NotificationCardComponent from "../../../../components/Cards/NotificationCardComponent";
 
 export default function NotificationScreen() {
     return(

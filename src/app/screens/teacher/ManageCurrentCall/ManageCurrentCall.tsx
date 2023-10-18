@@ -1,6 +1,6 @@
 import { View } from "react-native";
-import ListComponent from "../../../../components/ListComponent";
-import ButtonComponent from "../../../../components/ButtonComponent";
+import ListComponent from "../../../../components/Lists/ListComponent";
+import ButtonComponent from "../../../../components/Buttons/ButtonComponent";
 
 export default function ManageCurrentCallScreen() {
     return(

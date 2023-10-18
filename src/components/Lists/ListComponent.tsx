@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
 import ListItemComponent from "./ListItemComponent";
-import { ListDataModel } from "../core/models/ListDataModel";
+import { ListDataModel } from "../../core/models/ListDataModel";
 
 interface ListComponentProps {
     listType: 'teacher' | 'student';

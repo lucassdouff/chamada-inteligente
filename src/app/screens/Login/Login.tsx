@@ -1,8 +1,8 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Text, View, Image } from "react-native";
-import FormInputComponent from "../../../components/FormInputComponent";
+import FormInputComponent from "../../../components/Inputs/FormInputComponent";
 import { useNavigation } from "@react-navigation/native";
-import ButtonComponent from '../../../components/ButtonComponent';
+import ButtonComponent from '../../../components/Buttons/ButtonComponent';
 
 export default function LoginScreen() {
 

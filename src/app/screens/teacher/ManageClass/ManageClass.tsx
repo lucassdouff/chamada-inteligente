@@ -1,6 +1,6 @@
 import { View } from "react-native";
-import ListComponent from "../../../../components/ListComponent";
-import AddElementButton from "../../../../components/AddElementButton";
+import ListComponent from "../../../../components/Lists/ListComponent";
+import AddElementButton from "../../../../components/Buttons/AddElementButton";
 
 export default function ManageClassScreen() {
     return (

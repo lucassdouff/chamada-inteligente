@@ -1,7 +1,7 @@
 import React from "react";
 import { ScrollView, View, Text } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import { TableDataModel } from "../core/models/TableDataModel";
+import { TableDataModel } from "../../core/models/TableDataModel";
 
 interface TableComponentProps {
     tableData: TableDataModel[][];

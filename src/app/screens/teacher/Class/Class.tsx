@@ -1,7 +1,7 @@
 import { Text, View } from "react-native";
-import ButtonComponent from "../../../../components/ButtonComponent";
-import ClassBoxComponent from "../../../../components/ClassBoxComponent";
-import TableComponent from "../../../../components/TableComponent";
+import ButtonComponent from "../../../../components/Buttons/ButtonComponent";
+import ClassBoxComponent from "../../../../components/Cards/ClassBoxComponent";
+import TableComponent from "../../../../components/Tables/TableComponent";
 import { useNavigation } from "@react-navigation/core";
 import { StackNavigationProp } from "@react-navigation/stack";
 

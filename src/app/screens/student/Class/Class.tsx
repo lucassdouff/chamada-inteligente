@@ -1,7 +1,7 @@
 import { View, Text } from "react-native";
-import ClassBoxComponent from "../../../../components/ClassBoxComponent";
-import ButtonComponent from "../../../../components/ButtonComponent";
-import TableComponent from "../../../../components/TableComponent";
+import ClassBoxComponent from "../../../../components/Cards/ClassBoxComponent";
+import ButtonComponent from "../../../../components/Buttons/ButtonComponent";
+import TableComponent from "../../../../components/Tables/TableComponent";
 
 export default function ClassScreen() {
     return(

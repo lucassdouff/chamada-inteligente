@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import ClassBoxComponent from "../../../../components/ClassBoxComponent";
+import ClassBoxComponent from "../../../../components/Cards/ClassBoxComponent";
 
 export default function HomeScreen() {
     return(
