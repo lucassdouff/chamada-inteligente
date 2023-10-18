@@ -27,7 +27,7 @@ exports.deleteAttendanceRoll = (req, res, next) => {
     });
 }
 
-exports.getUpcomingAttendanceRolls = (req, res, next) => {
+exports.getAllScheduledAttendance = (req, res, next) => {
     const { id_class } = req.params;
 
     Attendance_roll.findAll({
