@@ -3,14 +3,14 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { TouchableWithoutFeedback } from "react-native";
 import { View, Text } from "react-native";
 
-interface ClassBoxComponentProps {
+interface ClassCardComponentProps {
     codigoTurma: string;
     nomeTurma: string;
     semestre: string;
     extraInfo?: string;
 }
 
-export default function ClassBoxComponent({codigoTurma, nomeTurma, semestre, extraInfo}: ClassBoxComponentProps) {
+export default function ClassCardComponent({codigoTurma, nomeTurma, semestre, extraInfo}: ClassCardComponentProps) {
 
     const navigation = useNavigation<StackNavigationProp<any>>();
     

@@ -1,6 +1,5 @@
 import { View } from "react-native";
-import ClassBoxComponent from "../../../../components/Cards/ClassBoxComponent";
-import AddElementButton from "../../../../components/Buttons/AddElementButton";
+import ClassBoxComponent from "../../../../components/Cards/ClassCardComponent";
 
 export default function HomeScreen() {
     return(
@@ -20,9 +19,6 @@ export default function HomeScreen() {
                 nomeTurma="Laboratório"
                 semestre="2023/2"
             />
-            <View className="mt-2">
-                <AddElementButton action={() => {}}/>
-            </View>
         </View>
     );
 }

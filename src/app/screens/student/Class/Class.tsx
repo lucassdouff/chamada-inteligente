@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import ClassBoxComponent from "../../../../components/Cards/ClassBoxComponent";
+import ClassBoxComponent from "../../../../components/Cards/ClassCardComponent";
 import ButtonComponent from "../../../../components/Buttons/ButtonComponent";
 import TableComponent from "../../../../components/Tables/TableComponent";
 

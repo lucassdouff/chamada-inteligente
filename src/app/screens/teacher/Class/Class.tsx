@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 import ButtonComponent from "../../../../components/Buttons/ButtonComponent";
-import ClassBoxComponent from "../../../../components/Cards/ClassBoxComponent";
+import ClassBoxComponent from "../../../../components/Cards/ClassCardComponent";
 import TableComponent from "../../../../components/Tables/TableComponent";
 import { useNavigation } from "@react-navigation/core";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -14,14 +14,14 @@ export default function ClassScreen() {
             <View className="mb-6">
                 <ClassBoxComponent codigoTurma={"TCC00315"} nomeTurma={"Laboratório"} semestre={"2023/2"} extraInfo={"2as de 7:00 às 9:00 e 4as de 9:00 às 11:00"} />
 
-                <View className="self-center w-3/4 mt-2">
+                <View className="self-center w-3/4 mt-4">
                     <ButtonComponent action={() => {
                         navigation.navigate('Gerenciar Chamadas');
                     }} color={"blue"} title={"GERENCIAR CHAMADAS"} />
                 </View>
             </View>
 
-            <View className="flex-col mb-6">
+            <View className="flex-col mb-4">
                 <Text className="my-4 text-xl">Informações da Turma</Text>
                 <View className="flex-col gap-4 p-2">
                     <View className="flex-row justify-between">
@@ -32,11 +32,6 @@ export default function ClassScreen() {
                         <Text>Média de frequência dos alunos:</Text>
                         <Text>60%</Text>
                     </View>
-                </View>
-                <View className="self-center mt-4">
-                    <ButtonComponent action={() => {
-                        navigation.navigate('Gerenciar Turma');
-                    }} color={"blue"} title={"GERENCIAR TURMA"} />
                 </View>
             </View>
 
