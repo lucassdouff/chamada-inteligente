@@ -1,13 +1,17 @@
-import { Text, View } from "react-native";
+import { Modal, Pressable, Text, View } from "react-native";
 import ButtonComponent from "../../../../components/Buttons/ButtonComponent";
 import ClassBoxComponent from "../../../../components/Cards/ClassCardComponent";
 import TableComponent from "../../../../components/Tables/TableComponent";
 import { useNavigation } from "@react-navigation/core";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useState } from "react";
+import ListComponent from "../../../../components/Lists/ListComponent";
 
 export default function ClassScreen() {
     
     const navigation = useNavigation<StackNavigationProp<any>>();
+
+    const [modalVisible, setModalVisible] = useState(false);
 
     return(
         <View className="flex-col py-2 px-4 w-full mt-2 divide-gray-500 divide-y overflow-auto">
@@ -40,12 +44,48 @@ export default function ClassScreen() {
                 <View className="self-center">
                     <TableComponent tableData={[
                         [{text: 'DATA', action: undefined}, {text: 'HORÁRIO', action: undefined}, {text: 'ALUNOS PRESENTES', action: undefined}, {text: 'MÉDIA DE PRESENÇA', action: undefined}, {text: '', action: undefined}],
-                        [{text: '17/10/2023', action: undefined}, {text: '7:00-9:00', action: undefined}, {text: '20', action: undefined}, {text: '40 min', action: undefined}, {text: 'EXPORTAR CHAMADA', action: () => {}}],
-                        [{text: '19/10/2023', action: undefined}, {text: '7:00-9:00', action: undefined}, {text: '13', action: undefined}, {text: '33 min', action: undefined}, {text: 'EXPORTAR CHAMADA', action: () => {}}],
+                        [{text: '17/10/2023', action: undefined}, {text: '7:00-9:00', action: undefined}, {text: '20', action: undefined}, {text: '40 min', action: undefined}, {text: 'EDITAR', action: () => {setModalVisible(true)}}],
+                        [{text: '19/10/2023', action: undefined}, {text: '7:00-9:00', action: undefined}, {text: '13', action: undefined}, {text: '33 min', action: undefined}, {text: 'EDITAR', action: () => {setModalVisible(true)}}],
                         ]} 
                     />
                 </View>
             </View>
+
+            <Modal
+                animationType="slide"
+                visible={modalVisible}
+                onRequestClose={() => {
+                setModalVisible(!modalVisible);
+                }}>
+                <View className="flex-col justify-between h-full py-2 px-4 w-full mt-2 overflow-auto">
+
+                    <ListComponent listType={"student"} listData={[
+                        {
+                            name: 'Roberto Carlos Filho',
+                            info: {
+                                present: true,
+                                action: () => {}
+                            }
+                        },
+                        {
+                            name: 'Roberto Carlos Filho Júnior',
+                            info: {
+                                present: false,
+                                action: () => {}
+                            }
+                        }
+                    ]} />
+
+                    <View className="flex-col mb-8">
+                        <View className="mb-2">
+                            <ButtonComponent action={() => {}} color={"green"} title={"SALVAR"} />
+                        </View>
+                        <ButtonComponent action={() => {
+                            setModalVisible(!modalVisible)
+                        }} color={"red"} title={"CANCELAR"} />
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 }
