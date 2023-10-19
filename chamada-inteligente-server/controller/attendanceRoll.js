@@ -26,3 +26,23 @@ exports.deleteAttendanceRoll = (req, res, next) => {
         res.status(500).json({ error: 'Erro ao excluir o attendanceRoll' });
     });
 }
+
+exports.getAllScheduledAttendance = (req, res, next) => {
+    const { id_class } = req.params;
+
+    Attendance_roll.findAll({
+        where: {
+            id_class: id_class,
+            datetime: {
+                [sequelize.Op.gt]: new Date() // seleciona chamadas com data/hora superior ao atual
+            }
+        }
+    })
+    .then(attendanceRolls => {
+        res.status(200).json(attendanceRolls);
+    })
+    .catch(error => {
+        console.error(error);
+        res.status(500).json({ error: 'Erro ao buscar as chamadas agendadas' });
+    });
+}
