@@ -1,4 +1,4 @@
-import { View, Text, Modal, Button } from "react-native";
+import { View, Text, Modal, Button, Alert } from "react-native";
 import TableComponent from "../../../../components/Tables/TableComponent";
 import ButtonComponent from "../../../../components/Buttons/ButtonComponent";
 import React, { useState } from "react";
@@ -65,6 +65,27 @@ export default function ManageCallsScreen() {
         showMode('time', range);
     };
 
+    const excludeCallAlert = () =>
+    Alert.alert('EXCLUIR CHAMADA', 'Tem certeza que quer excluir a chamada?', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {text: 'OK', onPress: () => console.log('OK Pressed')},
+    ]);
+
+    const startCallAlert = () =>
+    Alert.alert('INICIAR CHAMADA', 'Tem certeza que quer iniciar uma chamada?', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {text: 'OK', onPress: () => console.log('OK Pressed')},
+    ]);
+
+
     return(
         <View className="flex-col py-2 px-4 w-full mt-2 overflow-auto h-full justify-between">
             <View className="divide-gray-500 divide-y">
@@ -73,8 +94,8 @@ export default function ManageCallsScreen() {
                 <View className="self-center mt-4 pt-6">
                     <TableComponent tableData={[
                         [{text: 'DATA', action: undefined}, {text: 'HORÁRIO INÍCIO', action: undefined}, {text: 'HORÁRIO FIM', action: undefined}, {text: '', action: undefined}],
-                        [{text: '17/10/2023', action: undefined}, {text: '7:00', action: undefined}, {text: '9:00', action: undefined}, {text: 'EXCLUIR CHAMADA', action: () => {}}],
-                        [{text: '19/10/2023', action: undefined}, {text: '7:00', action: undefined}, {text: '9:00', action: undefined}, {text: 'EXCLUIR CHAMADA', action: () => {}}],
+                        [{text: '17/10/2023', action: undefined}, {text: '7:00', action: undefined}, {text: '9:00', action: undefined}, {text: 'EXCLUIR', action: excludeCallAlert}],
+                        [{text: '19/10/2023', action: undefined}, {text: '7:00', action: undefined}, {text: '9:00', action: undefined}, {text: 'EXCLUIR', action: excludeCallAlert}],
                         ]} 
                     />
                 </View>
@@ -82,7 +103,7 @@ export default function ManageCallsScreen() {
 
             <View className="flex-col mb-8">
                 <View className="mb-2">
-                    <ButtonComponent action={() => {}} color={"blue"} title={"INICIAR CHAMADA"} />
+                    <ButtonComponent action={startCallAlert} color={"blue"} title={"INICIAR CHAMADA"} />
                 </View>
                 <ButtonComponent action={() => {
                     setModalsVisible({
