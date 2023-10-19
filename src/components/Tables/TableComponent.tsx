@@ -23,7 +23,7 @@ export default function TableComponent({ tableData } : TableComponentProps) {
                                             {
                                                 item.action ? 
                                                 <View className="m-2">
-                                                    <ButtonComponent action={() => {}} color={"blue"} title={item.text}/>
+                                                    <ButtonComponent action={item.action} color={"blue"} title={item.text}/>
                                                 </View>
                                                 : <Text className="w-24 py-2 px-2.5 text-center">{item.text}</Text>
                                             }
