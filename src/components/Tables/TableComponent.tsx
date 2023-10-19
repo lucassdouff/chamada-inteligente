@@ -2,6 +2,7 @@ import React from "react";
 import { ScrollView, View, Text } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { TableDataModel } from "../../core/models/TableDataModel";
+import ButtonComponent from "../Buttons/ButtonComponent";
 
 interface TableComponentProps {
     tableData: TableDataModel[][];
@@ -21,9 +22,9 @@ export default function TableComponent({ tableData } : TableComponentProps) {
                                         <View>
                                             {
                                                 item.action ? 
-                                                <TouchableWithoutFeedback onPress={item.action}>
-                                                    <Text className="w-24 py-2 px-2.5 text-center underline">{item.text}</Text>
-                                                </TouchableWithoutFeedback>
+                                                <View className="m-2">
+                                                    <ButtonComponent action={item.action} color={"blue"} title={item.text}/>
+                                                </View>
                                                 : <Text className="w-24 py-2 px-2.5 text-center">{item.text}</Text>
                                             }
                                         </View>

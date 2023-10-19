@@ -27,7 +27,6 @@ exports.deleteAttendanceRoll = (req, res, next) => {
     });
 }
 
-
 exports.getAttendeesByAttendanceRoll = async (req, res, next) => {
     const { id_attendance_roll, id_class } = req.query;
     try{
@@ -59,7 +58,6 @@ exports.getAttendeesByAttendanceRoll = async (req, res, next) => {
     
 }
 
-
 const getAllPresentStudentsFromAttendenceRoll = async (id_attendance_roll) => {
     const [results, metadata] = await sequelize.query(`SELECT s.* FROM student s JOIN attendance a ON s.id_student = a.id_student WHERE a.id_attendance_roll = ${id_attendance_roll}`);
 
@@ -72,3 +70,24 @@ const getAllVacantStudentsFromAttendenceRoll = async (id_attendance_roll,id_clas
 
     return results;
 }
+
+exports.getAllScheduledAttendance = (req, res, next) => {
+    const { id_class } = req.params;
+
+    Attendance_roll.findAll({
+        where: {
+            id_class: id_class,
+            datetime: {
+                [sequelize.Op.gt]: new Date() // seleciona chamadas com data/hora superior ao atual
+            }
+        }
+    })
+    .then(attendanceRolls => {
+        res.status(200).json(attendanceRolls);
+    })
+    .catch(error => {
+        console.error(error);
+        res.status(500).json({ error: 'Erro ao buscar as chamadas agendadas' });
+    });
+}
+
