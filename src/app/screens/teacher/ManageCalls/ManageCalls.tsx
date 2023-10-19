@@ -4,6 +4,7 @@ import ButtonComponent from "../../../../components/Buttons/ButtonComponent";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import ListComponent from "../../../../components/Lists/ListComponent";
 
 export default function ManageCallsScreen() {
 
@@ -82,7 +83,12 @@ export default function ManageCallsScreen() {
         onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
-      {text: 'OK', onPress: () => console.log('OK Pressed')},
+      {text: 'OK', onPress: () => {
+        setModalsVisible({
+            ...modalsVisible,
+            startCallModal: !modalsVisible.startCallModal
+        });
+      }},
     ]);
 
 
@@ -197,6 +203,44 @@ export default function ManageCallsScreen() {
                         }} color={"red"} title={"CANCELAR"} />
                     </View>
                 </View>
+            </Modal>
+            <Modal 
+                animationType="slide"
+                visible={modalsVisible.startCallModal}
+                onRequestClose={() => {
+                setModalsVisible({
+                    ...modalsVisible,
+                    startCallModal: !modalsVisible.startCallModal
+                });
+                }}>
+                    <View className="flex-col justify-between h-full py-2 px-4 w-full mt-2 overflow-auto">
+                        <ListComponent listType={"student"} listData={[
+                            {
+                                name: 'Roberto Carlos Filho',
+                                info: {
+                                    present: true,
+                                    action: () => {}
+                                }
+                            },
+                            {
+                                name: 'Roberto Carlos Filho Júnior',
+                                info: {
+                                    present: false,
+                                    action: () => {}
+                                }
+                            }
+                        ]} />
+
+                        <View className="mb-8">
+                            <ButtonComponent action={() => {
+                                setModalsVisible({
+                                    ...modalsVisible,
+                                    startCallModal: !modalsVisible.startCallModal
+                                });
+                            }}  color={"red"} title={"ENCERRAR CHAMADA"}                
+                            />
+                        </View>
+                    </View>
             </Modal>
         </View>
     )
