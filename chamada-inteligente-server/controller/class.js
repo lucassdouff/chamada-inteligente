@@ -50,9 +50,9 @@ exports.addClass = async(req,res,next) => {
 exports.assignStudent = async(req,res,next) => {
     const {id_student, id_class} = req.body
     try{
-        await Class_Student.create({id_student,id_class});
+        const ClassStudent = await Class_Student.create({id_student,id_class});
 
-        return res.status(200);
+        return res.status(200).json(ClassStudent);
     } catch {
         res.status(500).json({error: "An error occurred while adding the student to the class"});
     }

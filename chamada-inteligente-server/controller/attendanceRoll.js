@@ -1,5 +1,5 @@
 const sequelize = require('../util/database');
-const { Attendance_roll } = require('../models/models'); 
+const { Attendance_roll, Attendance } = require('../models/models'); 
 
 exports.createAttendanceRoll = (req,res,next) =>{
     const {id_class, datetime} = req.body;
@@ -25,4 +25,50 @@ exports.deleteAttendanceRoll = (req, res, next) => {
         console.error(error);
         res.status(500).json({ error: 'Erro ao excluir o attendanceRoll' });
     });
+}
+
+
+exports.getAttendeesByAttendanceRoll = async (req, res, next) => {
+    const { id_attendance_roll, id_class } = req.query;
+    try{
+        const presentStudents = await getAllPresentStudentsFromAttendenceRoll(id_attendance_roll);
+        const vacantStudents = await getAllVacantStudentsFromAttendenceRoll(id_attendance_roll,id_class);
+
+        console.log(presentStudents,vacantStudents);
+        const mappedPresentStudents = presentStudents.map((student)=>{
+            return {
+                ...student,
+                present: true
+            }
+        })
+
+        const mappedVacantStudents = vacantStudents.map((student)=>{
+            return {
+                ...student,
+                present: false
+            }
+        })
+
+        const response = mappedPresentStudents.concat(mappedVacantStudents);
+
+        return res.status(200).json(response)
+    } catch {
+        res.status(500).json({error: "An error occurred while getting attendences"});
+    }
+
+    
+}
+
+
+const getAllPresentStudentsFromAttendenceRoll = async (id_attendance_roll) => {
+    const [results, metadata] = await sequelize.query(`SELECT s.* FROM student s JOIN attendance a ON s.id_student = a.id_student WHERE a.id_attendance_roll = ${id_attendance_roll}`);
+
+    return results;
+}
+
+const getAllVacantStudentsFromAttendenceRoll = async (id_attendance_roll,id_class) => {
+    const [results, metadata] = await sequelize.query(`SELECT s.* FROM student s LEFT JOIN class_student cs ON s.id_student = cs.id_student JOIN class c ON cs.id_class = c.id_class
+    LEFT JOIN attendance a ON s.id_student = a.id_student AND a.id_attendance_roll = ${id_attendance_roll} WHERE c.id_class = ${id_class} AND a.id_attendance_roll IS NULL;`);
+
+    return results;
 }
