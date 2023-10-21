@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const database = require('../util/database');
+const UUIDV4 = Sequelize.UUIDV4; // falta instalar o pacotee "npm install sequelize-uuid"
 
 const opts = {
     modelName: 'singularName',
@@ -44,8 +45,8 @@ const Course = database.define('course', {
 
 const User = database.define('user', {
     id_user: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
+        type: Sequelize.UUID,
+        defaultValue: UUIDV4,
         allowNull: false,
         primaryKey: true
     },
@@ -62,10 +63,6 @@ const User = database.define('user', {
         allowNull: false
     },
     password: {
-        type: Sequelize.STRING,
-        allowNull: false,
-    },
-    salt: {
         type: Sequelize.STRING,
         allowNull: false,
     }

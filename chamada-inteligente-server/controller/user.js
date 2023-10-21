@@ -1,87 +1,75 @@
 const sequelize = require('../util/database');
 const { User, Student, Teacher } = require('../models/models');
+const bcrypt = require('bcrypt'); // falta rodar o "npm install bcrypt"
 
+const saltRounds = 10;
 
 exports.addTeacher = async (req, res, next) => {
-  const {password, email, name, cpf, id_department} = req.body;
-  try {
-    const userId = await addUser({email,name,password,cpf});
+    const { password, email, name, cpf, id_department } = req.body;
+    try {
+        const userId = await addUser({ email, name, password, cpf });
 
-    if(userId === -1) return res.status(409).json({error: "Email already in use"});
+        if (userId === -1) return res.status(409).json({ error: "Email already in use" });
 
-    const id_teacher = userId[0][0].lastId;
-    const teacher = await Teacher.create({id_teacher,id_department, confirmed: false});
-    
-    res.status(200).json(teacher)
+        const teacher = await Teacher.create({ id_teacher: userId, id_department, confirmed: false });
 
-  } catch {
-    res.status(500).json({error: 'An error occurred while creating the user'});
-  }
+        res.status(200).json(teacher);
+
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while creating the teacher' });
+    }
 }
 
 exports.addStudent = async (req, res, next) => {
-  const {password, email, name, enrollment, id_course, cpf} = req.body;
+  const { password, email, name, enrollment, id_course, cpf } = req.body;
   try {
-    const userId = await addUser({email,name,password, cpf});
+      const userId = await addUser({ email, name, password, cpf });
 
-    if(userId === -1) return res.status(402).json({error: "Email already in use"});
+      if (userId === -1) return res.status(402).json({ error: "Email already in use" });
 
-    const id_student = userId[0][0].lastId;
-    const student = await Student.create({enrollment,id_course,id_student});
+      const student = await Student.create({ enrollment, id_course, id_student: userId });
 
-    res.status(200).json(student)
+      res.status(200).json(student);
 
-  } catch(error) {
-    res.status(500).json({error: 'An error occurred while creating the user'});
+  } catch (error) {
+      res.status(500).json({ error: 'An error occurred while creating the student' });
   }
 }
 
 exports.login = async (req, res, next) => {
   const { email, password } = req.body;
   try {
-    const [results, metadata] = await sequelize.query(`Select u.id_user from user u where u.email = '${email}' and u.password = SHA(CONCAT('${password}',u.salt))`);
+      const user = await User.findOne({ where: { email } });
 
-    console.log(results)
-    if (results.lenght === 0) return res.status(404).json({ error: 'User or password are incorrect'});
+      if (!user || !(await bcrypt.compare(password, user.password))) {
+          return res.status(404).json({ error: 'User or password are incorrect' });
+      }
 
-    const userId = results[0].id_user;
+      const userId = user.id_user;
+      const teacher = await Teacher.findOne({ where: { id_teacher: userId } });
 
-    const teacher = await Teacher.findOne({
-      where: {
-        id_teacher: userId
-    }
-    });
+      const role = teacher ? "teacher" : "student";
 
-    const role = teacher ? "teacher" : "student";
+      res.status(200).json({ role, id: userId });
 
-    res.status(200).json({role, id: userId});
-  } catch {
-    res.status(500).json({error: 'An error occurred while loging in'});
+  } catch (error) {
+      res.status(500).json({ error: 'An error occurred while logging in' });
   }
 }
 
-
-
-const addUser = async ({email, name, password,cpf}) => {
+const addUser = async ({ email, name, password, cpf }) => {
   try {
-    const salt = Math.floor(Math.random() * 10000);
-    const prevUser = await User.findOne({
-      where: {
-        email
-      }
-    })
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    if(prevUser) return -1;
+      const prevUser = await User.findOne({ where: { email } });
 
-    await sequelize.query(`insert into user (email,name,password,cpf,salt) values ('${email}','${name}',SHA(CONCAT('${password}','${salt}')),'${cpf}','${salt}');`)
-    const res = await sequelize.query("SELECT LAST_INSERT_ID() AS lastId");
-    return res;
+      if (prevUser) return -1;
 
-} catch(error) {
-    console.error("An error occurred while creating the user: ", error);
-}
+      const user = await User.create({ email, name, password: hashedPassword, cpf });
+      return user.id_user;
 
+  } catch (error) {
+      console.error("An error occurred while creating the user: ", error);
+      throw error;
+  }
 };
-
-
-
