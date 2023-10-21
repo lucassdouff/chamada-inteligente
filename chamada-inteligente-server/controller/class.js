@@ -1,5 +1,5 @@
 const sequelize = require('../util/database');
-const { Class, Class_Student, Class_Weekday } = require('../models/models'); 
+const { Class, Class_Student, Class_Weekday , Student, Attendance, Course, Department, Attendance_roll} = require('../models/models'); 
 
 exports.getClasses = async (req, res, next) => {
     const {id, role} = req.body
@@ -114,4 +114,73 @@ exports.removeClass = async (req, res, next) => {
     } catch {
         res.status(500).json({error: "An error occurred while deleting the class"});
     }
+}
+
+exports.historyLessons = async (req, res, next) => {
+
+    // `SELECT FROM attendance_roll ar WHERE ar.id_student = ${id_student}`
+    const id = req.params.id;
+    try{
+        const getClassByStudent_ = await getClassByStudent(id);
+        let getAllAttendanceRollByClasses_ = [];
+        for(let i =0;i<getClassByStudent_.length;i++){
+            const getAttendanceRollByClasses_ = await getAttendanceRollByClasses(getClassByStudent_[i]['id_class']);
+            getAllAttendanceRollByClasses_ = getAllAttendanceRollByClasses_.concat(getAttendanceRollByClasses_);
+        }
+        let getAllAttendanceByAttendanceRoll_ = [];
+        for(let k =0;k<getAllAttendanceRollByClasses_.length;k++){
+            const getAttendanceByAttendanceRoll_ = await getAttendanceByAttendanceRoll(getAllAttendanceRollByClasses_[k]['id_attendance_roll']);
+            if (getAttendanceByAttendanceRoll_.length != 0){
+                getAttendanceByAttendanceRoll_[0]['id_class'] = getAllAttendanceRollByClasses_[k]['id_class'];
+                getAllAttendanceByAttendanceRoll_ = getAllAttendanceByAttendanceRoll_.concat(getAttendanceByAttendanceRoll_);
+            }else{
+                const faltou = [
+                    {
+                        "hour": "Faltou", "id_attendance_roll": getAllAttendanceRollByClasses_[k]['id_attendance_roll'],
+                        "id_student": id,
+                        "id_class": getAllAttendanceRollByClasses_[k]['id_class']
+                    } 
+
+                ];
+                getAllAttendanceByAttendanceRoll_ = getAllAttendanceByAttendanceRoll_.concat(faltou);
+            }
+        };  
+        return res.status(200).json(getAllAttendanceByAttendanceRoll_)
+    }catch{
+        res.status(500).json({error: "An error occurred while getting history attendance by student"});
+    }
+}
+
+
+const getClassByStudent = async(id_student) =>{
+    const [results, metadata] = await sequelize.query(`SELECT
+    cs.id_class
+FROM
+    class_student AS cs
+WHERE
+    cs.id_student = ${id_student}; `);
+    return results;
+}
+
+const getAttendanceRollByClasses = async(id_class) =>{
+    const [results, metadata] = await sequelize.query(`SELECT
+    ar.id_attendance_roll,
+    ar.id_class
+FROM
+    attendance_roll AS ar
+WHERE
+    ar.id_class = ${id_class}; `);
+    return results;
+}
+
+const getAttendanceByAttendanceRoll = async(id) =>{
+    const [results, metadata] = await sequelize.query(`SELECT
+    a.hour,
+    a.id_attendance_roll,
+    a.id_student
+FROM
+    attendance AS a
+WHERE
+    a.id_attendance_roll = ${id}; `);
+    return results;
 }
