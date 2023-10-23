@@ -36,9 +36,9 @@ export default function ClassScreen() {
                 <Text className="my-4 text-xl">Histórico de aulas</Text>
                 <View className="self-center">
                     <TableComponent tableData={[
-                        [{text: 'DATA', action: undefined}, {text: 'HORÁRIO', action: undefined}, {text: '', action: undefined}],
-                        [{text: '17/10/2023', action: undefined}, {text: '7:00-9:00', action: undefined}, {text: 'CONSULTAR', action: () => {}}],
-                        [{text: '19/10/2023', action: undefined}, {text: '7:00-9:00', action: undefined}, {text: 'CONSULTAR', action: () => {}}]
+                        [{text: 'DATA', action: undefined}, {text: 'HORÁRIO', action: undefined}, {text: 'PRESENÇA', action: undefined}, {text: '', action: undefined}],
+                        [{text: '17/10/2023', action: undefined}, {text: '7:00-9:00', action: undefined}, {text: 'PRESENTE', action: undefined}, {text: 'CONSULTAR', action: () => {}}],
+                        [{text: '19/10/2023', action: undefined}, {text: '7:00-9:00', action: undefined}, {text: 'AUSENTE', action: undefined}, {text: 'CONSULTAR', action: () => {}}]
                         ]} 
                     />
                 </View>
