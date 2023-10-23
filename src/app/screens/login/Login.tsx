@@ -14,9 +14,15 @@ export default function LoginScreen() {
             <Text className="self-center mb-10 text-xl">Acesso aos sistemas da UFF</Text>
             <FormInputComponent label="Identificação (idUFF)" placeholder="CPF, email, passaporte" />
             <FormInputComponent label="Senha"  />
+            <View className='mb-4'>
+                <ButtonComponent action={() => {
+                    navigation.navigate('TeacherDrawer');
+                }} color={'blue'} title={'ACESSAR (PROFESSOR)'}                
+                />
+            </View>
             <ButtonComponent action={() => {
-                navigation.navigate('TeacherDrawer');
-            }} color={'blue'} title={'ACESSAR'}                
+                navigation.navigate('StudentDrawer');
+            }} color={'blue'} title={'ACESSAR (ALUNO)'}                
             />
         </View>
     )

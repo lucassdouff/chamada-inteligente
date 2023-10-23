@@ -19,13 +19,13 @@ export default function TableComponent({ tableData } : TableComponentProps) {
                             <View className="flex-row divide-x">
                                 {
                                     arrList.map((item) => (
-                                        <View>
+                                        <View className="flex items-center justify-center">
                                             {
                                                 item.action ? 
-                                                <View className="m-2">
+                                                <View className="m-2 py-1.5 px-2">
                                                     <ButtonComponent action={item.action} color={"blue"} title={item.text}/>
                                                 </View>
-                                                : <Text className="w-24 py-2 px-2.5 text-center">{item.text}</Text>
+                                                : <Text className="m-2 w-24 py-1.5 px-2 text-center">{item.text}</Text>
                                             }
                                         </View>
                                     ))
