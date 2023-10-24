@@ -1,16 +1,32 @@
-import { View, Text } from "react-native";
+import { View, Text, Switch } from "react-native";
 import ClassCardComponent from "../../../../components/Cards/ClassCardComponent";
 import ButtonComponent from "../../../../components/Buttons/ButtonComponent";
 import TableComponent from "../../../../components/Tables/TableComponent";
+import { useState } from "react";
 
 export default function ClassScreen() {
+
+    const [isEnabled, setIsEnabled] = useState(false);
+
+    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+    
     return(
         <View className="flex-col py-2 px-4 w-full mt-2 divide-gray-500 divide-y overflow-auto">
             <View className="mb-6">
                 <ClassCardComponent codigoTurma={"TCC00315"} nomeTurma={"Laboratório"} semestre={"2023/2"} staticMode additionalInfo={"2as de 7:00 às 9:00 e 4as de 9:00 às 11:00"} />
 
+                <View className="flex-row justify-between items-center px-2">
+                    <Text className="text-lg">Presença Automática:</Text>
+                    <Switch
+                        trackColor={{false: '#767577', true: '#2564eb83'}}
+                        thumbColor={isEnabled ? '#2563EB' : '#f4f3f4'}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={toggleSwitch}
+                        value={isEnabled}
+                    />
+                </View>
                 <View className="self-center w-3/4 mt-2">
-                    <ButtonComponent action={() => {}} color={"blue"} title={"INDICAR PRESENÇA"} />
+                    <ButtonComponent disabled={isEnabled} action={() => {}} color={"blue"} title={"INDICAR PRESENÇA"} />
                 </View>
             </View>
 

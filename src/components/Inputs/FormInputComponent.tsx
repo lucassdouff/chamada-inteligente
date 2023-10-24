@@ -7,7 +7,7 @@ interface FormInputComponentProps {
 
 export default function FormInputComponent({ label, placeholder }: FormInputComponentProps) {
     return(
-        <View className="flex gap-2 mb-6">
+        <View className="flex gap-2 mb-4">
             <Text>{label}</Text>
             <TextInput underlineColorAndroid="transparent" className="px-2 py-0.5 border border-gray-400 rounded" placeholder={placeholder} />
         </View>
