@@ -1,12 +1,17 @@
-import { View, Text } from "react-native";
+import { View, Text, Modal, SafeAreaView } from "react-native";
 import ButtonComponent from "../../../../components/Buttons/ButtonComponent";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useState } from "react";
+import { TextInput } from "react-native-gesture-handler";
 
 export type StackParamList = {
     Class: { classID: string};
 }
 
 export default function ManageClassScreen({ route, navigation }: NativeStackScreenProps<StackParamList, 'Class'>) {
+
+    const [modalVisible, setModalVisible] = useState(false);
+
 
     const { classID } = route.params
     console.log(classID);
@@ -32,9 +37,51 @@ export default function ManageClassScreen({ route, navigation }: NativeStackScre
                 <View className="flex-col items-center justify-start h-full">
                     <Text className="text-xl px-2 py-5 self-start">Processo de abonação de falta</Text>
                     
-                    <ButtonComponent action={() => {}} color={"blue"} title={"SOLICITAR"} />
+                    <ButtonComponent action={() => {
+                        setModalVisible(!modalVisible);
+                    }} color={"blue"} title={"SOLICITAR"} />
                 </View>
             </View>
+            <Modal
+                animationType="slide"
+                visible={modalVisible}
+                onRequestClose={() => {
+                setModalVisible(!modalVisible);
+                }}>
+                <View className="flex-col justify-between h-full py-2 px-4 w-full mt-2 overflow-y-auto">
+
+                    <View className="divide-gray-500 divide-y">
+                        <Text className="text-xl px-2 py-1 mb-4">Preencha os campos abaixo</Text>
+                        <View className="py-4">
+                            <View className='py-4 flex-col mb-4'>
+                                <Text className="text-base mb-4">ANEXAR ATESTADO MÉDICO (PDF):</Text>
+                                <View className='self-start'> 
+                                    <ButtonComponent action={()=>{}} color={"blue"} title={"ANEXAR ARQUIVO"} />
+                                </View>
+                            </View>
+                            <View>
+                                <Text className="text-base mb-4">COMENTÁRIOS:</Text>
+                                <TextInput
+                                    multiline
+                                    numberOfLines={6}
+                                    placeholder="Digite alguma observação..."
+                                    style={{textAlignVertical:"top"}}
+                                    className="bg-gray-100 p-2"
+                                /> 
+                            </View>
+                            
+                        </View>
+                    </View>
+                    <View className="flex-col mb-8">
+                        <View className="mb-2">
+                            <ButtonComponent action={() => {}} color={"green"} title={"CONFIRMAR"} />
+                        </View>
+                        <ButtonComponent action={() => {
+                            setModalVisible(!modalVisible);
+                        }} color={"red"} title={"CANCELAR"} />
+                    </View>
+                </View>
+            </Modal>
         </View>
     )
 }
