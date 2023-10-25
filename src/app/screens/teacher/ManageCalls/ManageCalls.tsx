@@ -136,15 +136,15 @@ export default function ManageCallsScreen() {
 
                         <View className="mt-4 pt-8 divide-gray-300 divide-y">
                             <View className="mb-8">
-                                <View className="flex-row items-center justify-center mb-4">
-                                    <View className="flex-col mb-4 mr-4">
-                                        <Text className="text-base mb-4">Definir data de início:</Text>
+                                <View className="flex-row items-center justify-evenly mb-4">
+                                    <View className="w-1/2 flex-col mb-4 mr-4">
+                                        <Text className="text-base text-center mb-4">Definir data inicial:</Text>
                                         <ButtonComponent action={() => {
                                             showDatepicker('start');
                                         }} color={"blue"} title={"DATA INÍCIO"} />
                                     </View>
-                                    <View className="flex-col mb-4">
-                                        <Text className="text-base mb-4">Definir horário de início:</Text>
+                                    <View className="w-1/2 flex-col mb-4">
+                                        <Text className="text-base text-center mb-4">Definir horário inicial:</Text>
                                         <ButtonComponent action={() => {
                                             showTimepicker('start');
                                         }} color={"blue"} title={"HORÁRIO INÍCIO"} />
@@ -163,15 +163,15 @@ export default function ManageCallsScreen() {
                             </View>
 
                             <View className="pt-8">
-                                <View className="flex-row items-center justify-center mb-4">
-                                    <View className="flex-col mb-4 mr-4">
-                                        <Text className="text-base mb-4">Definir data de término:</Text>
+                                <View className="flex-row items-center justify-evenly mb-4">
+                                    <View className="w-1/2 flex-col mb-4 mr-4">
+                                        <Text className="text-base text-center mb-4">Definir data final:</Text>
                                         <ButtonComponent action={() => {
                                             showDatepicker('end');
                                         }} color={"blue"} title={"DATA FIM"} />
                                     </View>
-                                    <View className="flex-col mb-4">
-                                        <Text className="text-base mb-4">Definir horário de término:</Text>
+                                    <View className="w-1/2 flex-col mb-4">
+                                        <Text className="text-base text-center mb-4">Definir horário final:</Text>
                                         <ButtonComponent action={() => {
                                             showTimepicker('end');
                                         }} color={"blue"} title={"HORÁRIO FIM"} />
