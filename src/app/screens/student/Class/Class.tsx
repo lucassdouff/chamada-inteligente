@@ -2,8 +2,13 @@ import { View, Text } from "react-native";
 import ClassCardComponent from "../../../../components/Cards/ClassCardComponent";
 import ButtonComponent from "../../../../components/Buttons/ButtonComponent";
 import TableComponent from "../../../../components/Tables/TableComponent";
+import { useNavigation } from "@react-navigation/core";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 export default function ClassScreen() {
+
+    const navigation = useNavigation<StackNavigationProp<any>>();
+    
     return(
         <View className="flex-col py-2 px-4 w-full mt-2 divide-gray-500 divide-y overflow-auto">
             <View className="mb-6">
@@ -37,8 +42,16 @@ export default function ClassScreen() {
                 <View className="self-center">
                     <TableComponent tableData={[
                         [{text: 'DATA', action: undefined}, {text: 'HORÁRIO', action: undefined}, {text: 'PRESENÇA', action: undefined}, {text: '', action: undefined}],
-                        [{text: '17/10/2023', action: undefined}, {text: '7:00-9:00', action: undefined}, {text: 'PRESENTE', action: undefined}, {text: 'CONSULTAR', action: () => {}}],
-                        [{text: '19/10/2023', action: undefined}, {text: '7:00-9:00', action: undefined}, {text: 'AUSENTE', action: undefined}, {text: 'CONSULTAR', action: () => {}}]
+                        [{text: '17/10/2023', action: undefined}, {text: '7:00-9:00', action: undefined}, {text: 'PRESENTE', action: undefined}, {text: 'CONSULTAR', action: () => {
+                            navigation.navigate('Consultar Aula', {
+                                classID: '123456788'
+                            });
+                        }}],
+                        [{text: '19/10/2023', action: undefined}, {text: '7:00-9:00', action: undefined}, {text: 'AUSENTE', action: undefined}, {text: 'CONSULTAR', action: () => {
+                            navigation.navigate('Consultar Aula', {
+                                classID: '123456789'
+                            });
+                        }}]
                         ]} 
                     />
                 </View>
