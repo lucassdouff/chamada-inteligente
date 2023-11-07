@@ -1,4 +1,4 @@
 export type UserSessionModel = {
-    id: string;
-    role: 'teacher' | 'student';
+    id: number | undefined;
+    role: "teacher" | "student" | undefined;
 }

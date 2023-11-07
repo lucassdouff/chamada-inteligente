@@ -7,6 +7,7 @@ interface NavigationProviderProps {
 
 type NavigationContextProps = {
     userSession: UserSessionModel;
+    setUserSession: React.Dispatch<React.SetStateAction<UserSessionModel>>;
 };
 
 const NavigationContext = createContext<NavigationContextProps>({} as NavigationContextProps);
@@ -18,6 +19,7 @@ export function NavigationProvider({ children }: NavigationProviderProps) {
     const value = useMemo(() => {
         return {
             userSession: userSession,
+            setUserSession: setUserSession
         }
     }, []);
 

@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Control, FieldValues, useController, useForm } from 'react-hook-form';
 import { TextInput } from 'react-native-gesture-handler';
 import { UserDTO } from '../../../core/dtos/UserDTO';
+import { navigationController } from '../../../core/controllers/NavigationController';
 
 interface InputController {
     control: Control<FieldValues, any>;
@@ -24,7 +25,7 @@ const Input = ({ control, name, placeholder }: InputController) => {
         <TextInput 
             placeholder={placeholder}
             underlineColorAndroid="transparent"
-            className="px-2 py-0.5 border border-gray-400 rounded"
+            className="px-2 py-0.5 border border-gray-400 rounded mb-4"
             value={field.value}
             onChangeText={field.onChange}
         />
@@ -36,19 +37,29 @@ export default function LoginScreen() {
 
     const navigation = useNavigation<StackNavigationProp<any>>();
 
+    const { setUserSession } = navigationController();
+
     const { handleSubmit, control } = useForm();
 
     const onSubmit = async (data: FieldValues) => {
-        const user : UserDTO = await axios.get('http://localhost:3306/user/login', {
+        
+        const response = await axios.get<UserDTO>('http://192.168.0.141:3000/user/login', {
             params: {
                 email: data.email,
                 password: data.password
-            }
-        })
-        .then((response) => {return response.data})
-        .catch((error) => {return error});
+        }}).catch(error => {console.log(error.response.data)});
 
-        console.log(user)
+        const user : UserDTO | undefined = response?.data;
+
+        setUserSession({
+            id: user?.id,
+            role: user?.role
+        });
+
+        if(user?.role === 'student') navigation.navigate('StudentDrawer');
+
+        if(user?.role === 'teacher') navigation.navigate('TeacherDrawer');
+
     }
 
     return(
@@ -56,7 +67,9 @@ export default function LoginScreen() {
             <Image className="self-center mb-10" source={require('../../../../assets/logoIdUFF.png')} style={{width: 140, height: 150}}/>
             <Text className="self-center mb-10 text-xl">Acesso aos sistemas da UFF</Text>
 
+            <Text className="mb-2">Identificação (idUFF)</Text>
             <Input name='email' placeholder='CPF, email, passaporte' control={control} />
+            <Text className="mb-2">Senha</Text>
             <Input name='password' control={control} />
             <Button title="ACESSAR" onPress={handleSubmit(onSubmit)} />
         </View>
