@@ -39,7 +39,7 @@ export default function LoginScreen() {
     const { handleSubmit, control } = useForm();
 
     const onSubmit = async (data: FieldValues) => {
-        const user : UserDTO = await axios.get('http://localhost:3000/user/login', {
+        const user : UserDTO = await axios.get('http://localhost:3306/user/login', {
             params: {
                 email: data.email,
                 password: data.password
@@ -48,6 +48,7 @@ export default function LoginScreen() {
         .then((response) => {return response.data})
         .catch((error) => {return error});
 
+        console.log(user)
     }
 
     return(
