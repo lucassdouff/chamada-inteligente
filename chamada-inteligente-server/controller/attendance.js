@@ -1,4 +1,4 @@
-const { Attendance, Attendance_roll, Class } = require('../models/models');
+const { Attendance, Attendance_roll, Class, Class_Student } = require('../models/models');
 
 exports.createAttendance = async(req, res, next) => {
     const {medical_certificate, id_attendance_roll, id_student} = req.body
@@ -36,8 +36,6 @@ exports.getAllAttendances = async (req, res, next) => {
     res.status(500).json({ error: 'Erro ao buscar as chamadas abertas' });
   }
 };
-
-const { Class_Student, Attendance } = require('../models/models');
 
 exports.listAttendanceForClass = async (req, res) => {
   const { classId } = req.params;
