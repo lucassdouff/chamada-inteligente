@@ -1,16 +1,35 @@
-import { View, Text } from "react-native";
-import ClassBoxComponent from "../../../../components/ClassBoxComponent";
-import ButtonComponent from "../../../../components/ButtonComponent";
-import TableComponent from "../../../../components/TableComponent";
-
+import { View, Text, Switch, Button } from "react-native";
+import ClassCardComponent from "../../../../components/Cards/ClassCardComponent";
+import TableComponent from "../../../../components/Tables/TableComponent";
+import { useState } from "react";
+import { useNavigation } from "@react-navigation/core";
+import { StackNavigationProp } from "@react-navigation/stack";
+        
 export default function ClassScreen() {
+
+    const [isEnabled, setIsEnabled] = useState(false);
+
+    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
+    const navigation = useNavigation<StackNavigationProp<any>>();
+    
     return(
         <View className="flex-col py-2 px-4 w-full mt-2 divide-gray-500 divide-y overflow-auto">
             <View className="mb-6">
-                <ClassBoxComponent codigoTurma={"TCC00315"} nomeTurma={"Laboratório"} semestre={"2023/2"} extraInfo={"2as de 7:00 às 9:00 e 4as de 9:00 às 11:00"} />
+                <ClassCardComponent idTurma={1234} codigoTurma={"TCC00315"} nomeTurma={"Laboratório"} semestre={"2023/2"} staticMode schedule={"2as de 7:00 às 9:00 e 4as de 9:00 às 11:00"} />
 
+                <View className="flex-row justify-between items-center px-2">
+                    <Text className="text-lg">Presença Automática:</Text>
+                    <Switch
+                        trackColor={{false: '#767577', true: '#2564eb83'}}
+                        thumbColor={isEnabled ? '#2563EB' : '#f4f3f4'}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={toggleSwitch}
+                        value={isEnabled}
+                    />
+                </View>
                 <View className="self-center w-3/4 mt-2">
-                    <ButtonComponent action={() => {}} color={"blue"} title={"INDICAR PRESENÇA"} />
+                    <Button title="INDICAR PRESENÇA" disabled={isEnabled} onPress={() => {}} color="blue" />
                 </View>
             </View>
 
@@ -36,9 +55,17 @@ export default function ClassScreen() {
                 <Text className="my-4 text-xl">Histórico de aulas</Text>
                 <View className="self-center">
                     <TableComponent tableData={[
-                        [{text: 'DATA', action: undefined}, {text: 'HORÁRIO', action: undefined}, {text: 'PRESENÇA', action: undefined}],
-                        [{text: '17/10/2023', action: undefined}, {text: '7:00-9:00', action: undefined}, {text: 'PRESENTE', action: undefined}],
-                        [{text: '19/10/2023', action: undefined}, {text: '7:00-9:00', action: undefined}, {text: 'AUSENTE', action: () => {}}]
+                        [{text: 'DATA', action: undefined}, {text: 'HORÁRIO', action: undefined}, {text: 'PRESENÇA', action: undefined}, {text: '', action: undefined}],
+                        [{text: '17/10/2023', action: undefined}, {text: '7:00-9:00', action: undefined}, {text: 'PRESENTE', action: undefined}, {text: 'CONSULTAR', action: () => {
+                            navigation.navigate('Consultar Aula', {
+                                classID: '123456788'
+                            });
+                        }}],
+                        [{text: '19/10/2023', action: undefined}, {text: '7:00-9:00', action: undefined}, {text: 'AUSENTE', action: undefined}, {text: 'CONSULTAR', action: () => {
+                            navigation.navigate('Consultar Aula', {
+                                classID: '123456789'
+                            });
+                        }}]
                         ]} 
                     />
                 </View>

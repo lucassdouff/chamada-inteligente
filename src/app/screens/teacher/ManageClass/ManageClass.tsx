@@ -1,6 +1,5 @@
 import { View } from "react-native";
-import ListComponent from "../../../../components/ListComponent";
-import AddElementButton from "../../../../components/AddElementButton";
+import ListComponent from "../../../../components/Lists/ListComponent";
 
 export default function ManageClassScreen() {
     return (
@@ -27,10 +26,6 @@ export default function ManageClassScreen() {
                     }
                 }
             ]} />
-
-            <View className="self-center mt-4">
-                <AddElementButton action={() => {}} />
-            </View>
         </View>
     )
 }

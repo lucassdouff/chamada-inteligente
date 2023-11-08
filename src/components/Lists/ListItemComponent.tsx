@@ -1,11 +1,10 @@
 import { View, Text, TouchableWithoutFeedback, Image } from "react-native";
-import { ListDataModel } from "../core/models/ListDataModel";
+import { ListDataModel } from "../../core/models/ListDataModel";
 
 interface ListItemComponentProps {
 
     itemData: ListDataModel;
 }
-
 
 export default function ListItemComponent({itemData} : ListItemComponentProps){
     let color = '';
@@ -20,7 +19,7 @@ export default function ListItemComponent({itemData} : ListItemComponentProps){
     return (
         <View className='mt-2 border-spacing-y-2 py-3.5 flex-row justify-between border-b border-b-gray-300 w-[97%] items-center'>
             <View className='px-1 flex-row items-center gap-4'>
-                {itemData.photo?<Image source={{uri:itemData.photo}}/>:<Image source={require('../../assets/perfil.png')}style={{width: 32, height: 32}}/>}
+                {itemData.photo?<Image source={{uri:itemData.photo}}/>:<Image source={require('../../../assets/perfil.png')}style={{width: 32, height: 32}}/>}
                 
                 <Text>{itemData.name}</Text>
             </View>
