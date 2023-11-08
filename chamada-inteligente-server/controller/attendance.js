@@ -17,6 +17,26 @@ exports.createAttendance = async(req, res, next) => {
     } 
 }
 
+exports.getAllAttendances = async (req, res, next) => {
+  const { attendanceRollId } = req.params;
+
+  try {
+    const attendances = await Attendance.findAll({
+      where: {
+        id_attendance_roll: attendanceRollId,
+        hour: {
+          [DATE.lte]: new Date(),
+        },
+      },
+    });
+
+    res.status(200).json(attendances);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao buscar as chamadas abertas' });
+  }
+};
+
 const { Class_Student, Attendance } = require('../models/models');
 
 exports.listAttendanceForClass = async (req, res) => {
