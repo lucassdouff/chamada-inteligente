@@ -4,8 +4,8 @@ import { useNavigation } from "@react-navigation/native";
 import axios from 'axios';
 import { Control, FieldValues, useController, useForm } from 'react-hook-form';
 import { TextInput } from 'react-native-gesture-handler';
-import { UserDTO } from '../../../core/dtos/UserDTO';
 import { navigationController } from '../../../core/controllers/NavigationController';
+import { UserSessionDTO } from '../../../core/dtos/UserSessionDTO';
 
 interface InputController {
     control: Control<FieldValues, any>;
@@ -37,24 +37,21 @@ export default function LoginScreen() {
 
     const navigation = useNavigation<StackNavigationProp<any>>();
 
-    const { setUserSession } = navigationController();
+    const { setSession } = navigationController();
 
     const { handleSubmit, control } = useForm();
 
     const onSubmit = async (data: FieldValues) => {
         
-        const response = await axios.get<UserDTO>('http://192.168.0.141:3000/user/login', {
+        const response = await axios.get<UserSessionDTO>('http://192.168.0.141:3000/user/login', {
             params: {
                 email: data.email,
                 password: data.password
         }}).catch(error => {console.log(error.response.data)});
 
-        const user : UserDTO | undefined = response?.data;
+        const user : UserSessionDTO | undefined = response?.data;
 
-        setUserSession({
-            id: user?.id,
-            role: user?.role
-        });
+        setSession(user);
 
         if(user?.role === 'student') navigation.navigate('StudentDrawer');
 
