@@ -13,20 +13,11 @@ exports.getAllCourse = async(req, res) => {
 
 exports.createCourse = async(req, res) => {
     try {
-        const { name, nameDepartment } = req.body;
-        const department = await Department.findOne({
-                                     where: {
-                                        name: nameDepartment
-                                    }
-        });
+        const { name, id_department } = req.body;
 
-        if (!department){
-            return res.status(404).json({ error: 'Department not exists.'});
-        }else{
-            const newCourse = await Course.create({name: name, id_department : department["id_department"]});
-            res.json(newCourse);
-        }
-    }catch(error){
+        const newCourse = await Course.create({name, id_department });
+        res.json(newCourse);
+    } catch(error){
         console.error("An error occurred while creating the course: ", error);
         res.status(500).json({error: 'An error occurred while creating the course'});
     }

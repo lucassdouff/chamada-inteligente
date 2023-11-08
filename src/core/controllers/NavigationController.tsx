@@ -6,23 +6,22 @@ interface NavigationProviderProps {
 };
 
 type NavigationContextProps = {
-    userSession: UserSessionModel;
+    userSession: UserSessionModel | undefined;
+    setSession: (userSession: UserSessionModel | undefined) => void;
 };
 
 const NavigationContext = createContext<NavigationContextProps>({} as NavigationContextProps);
 
 export function NavigationProvider({ children }: NavigationProviderProps) {
 
-    const [userSession, setUserSession] = useState<UserSessionModel>({} as UserSessionModel);
+    const [userSession, setUserSession] = useState<UserSessionModel | undefined>();
 
-    const value = useMemo(() => {
-        return {
-            userSession: userSession,
-        }
-    }, []);
+    const setSession = (session: UserSessionModel | undefined) => {
+        setUserSession(session);
+    }
 
     return (
-        <NavigationContext.Provider value={value}>
+        <NavigationContext.Provider value={{ userSession, setSession }}>
             {children}
         </NavigationContext.Provider>
     );

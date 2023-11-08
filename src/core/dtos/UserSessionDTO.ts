@@ -1,4 +1,4 @@
-export type UserSessionModel = {
+export interface UserSessionDTO {
     id: number | undefined;
     role: "teacher" | "student" | undefined;
 }

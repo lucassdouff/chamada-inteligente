@@ -5,6 +5,7 @@ import { Icon } from "react-native-elements";
 import { createStackNavigator } from "@react-navigation/stack";
 import ClassScreen from "../../../screens/student/Class/Class";
 import HomeScreen from "../../../screens/student/Home/Home";
+import ManageClassScreen from "../../../screens/student/ManageClass/ManageClass";
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,7 @@ export function HomeNavigation() {
                 </View>
             )}} />
             <Stack.Screen name="Turma" component={ClassScreen} />
+            <Stack.Screen name="Consultar Aula" component={ManageClassScreen} />
         </Stack.Navigator>
     );
 }

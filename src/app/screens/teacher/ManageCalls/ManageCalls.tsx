@@ -1,6 +1,5 @@
 import { View, Text, Modal, Button, Alert } from "react-native";
 import TableComponent from "../../../../components/Tables/TableComponent";
-import ButtonComponent from "../../../../components/Buttons/ButtonComponent";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
@@ -109,14 +108,14 @@ export default function ManageCallsScreen() {
 
             <View className="flex-col mb-8">
                 <View className="mb-2">
-                    <ButtonComponent action={startCallAlert} color={"blue"} title={"INICIAR CHAMADA"} />
+                    <Button title="INICIAR CHAMADA" color='blue' onPress={startCallAlert} />
                 </View>
-                <ButtonComponent action={() => {
+                <Button title="AGENDAR CHAMADA" color='green' onPress={() => {
                     setModalsVisible({
                         ...modalsVisible,
                         scheduleCallModal: !modalsVisible.scheduleCallModal
                     });
-                }} color={"green"} title={"AGENDAR CHAMADA"} />
+                }} />
             </View>
 
             <Modal
@@ -128,29 +127,25 @@ export default function ManageCallsScreen() {
                     scheduleCallModal: !modalsVisible.scheduleCallModal
                 });
                 }}>
-                <View className="flex-col justify-between h-full py-2 px-4 w-full mt-2 overflow-auto">
+                <View className="flex-col justify-between h-full py-2 px-4 w-full mt-2 overflow-y-auto">
 
                     <SafeAreaView className="divide-gray-500 divide-y mt-4">
 
-                        <Text className="text-xl py-1">Definir data/horário de agendamento</Text>
+                        <Text className="text-xl p-2">Definir data/horário de agendamento</Text>
 
                         <View className="mt-4 pt-8 divide-gray-300 divide-y">
                             <View className="mb-8">
-                                <View className="flex-col items-center justify-center mb-4">
-                                    <View className="flex-row items-center self-start mb-4">
-                                        <Text className="text-base mr-4">Definir data de início:</Text>
-                                        <ButtonComponent action={() => {
-                                            showDatepicker('start');
-                                        }} color={"blue"} title={"DATA INÍCIO"} />
+                                <View className="flex-row items-center justify-evenly mb-4">
+                                    <View className="w-1/2 flex-col mb-4 mr-4">
+                                        <Text className="text-base text-center mb-4">Definir data inicial:</Text>
+                                        <Button title="DATA INÍCIO" color='blue' onPress={() => {showDatepicker('start');}} />
                                     </View>
-                                    <View className="flex-row items-center self-start mb-4">
-                                        <Text className="text-base mr-4">Definir horário de início:</Text>
-                                        <ButtonComponent action={() => {
-                                            showTimepicker('start');
-                                        }} color={"blue"} title={"HORÁRIO INÍCIO"} />
+                                    <View className="w-1/2 flex-col mb-4">
+                                        <Text className="text-base text-center mb-4">Definir horário inicial:</Text>
+                                        <Button title="HORÁRIO INÍCIO" color='blue' onPress={() => {showTimepicker('start');}} />
                                     </View>
                                 </View>
-                                <Text className="text-lg self-center"><Text className="text-lg font-bold">Data/Horário início:</Text> {date.dateStart.toLocaleString()}</Text>
+                                <Text className="text-lg self-center text-center"><Text className="text-lg font-bold">Data/Horário início:</Text> {date.dateStart.toLocaleString()}</Text>
                                 {show.showStartPicker && (
                                     <DateTimePicker
                                     testID="dateTimePicker"
@@ -163,21 +158,17 @@ export default function ManageCallsScreen() {
                             </View>
 
                             <View className="pt-8">
-                                <View className="flex-col items-center justify-center mb-4">
-                                    <View className="flex-row items-center self-start mb-4">
-                                        <Text className="text-base mr-4">Definir data de término:</Text>
-                                        <ButtonComponent action={() => {
-                                            showDatepicker('end');
-                                        }} color={"blue"} title={"DATA FIM"} />
+                                <View className="flex-row items-center justify-evenly mb-4">
+                                    <View className="w-1/2 flex-col mb-4 mr-4">
+                                        <Text className="text-base text-center mb-4">Definir data final:</Text>
+                                        <Button title="DATA FIM" color='blue' onPress={() => {showDatepicker('end');}} />
                                     </View>
-                                    <View className="flex-row items-center self-start mb-4">
-                                        <Text className="text-base mr-4">Definir horário de término:</Text>
-                                        <ButtonComponent action={() => {
-                                            showTimepicker('end');
-                                        }} color={"blue"} title={"HORÁRIO FIM"} />
+                                    <View className="w-1/2 flex-col mb-4">
+                                        <Text className="text-base text-center mb-4">Definir horário final:</Text>
+                                        <Button title="HORÁRIO FIM" color='blue' onPress={() => {showTimepicker('end');}} />
                                     </View>
                                 </View>
-                                <Text className="text-lg self-center"><Text className="text-lg font-bold">Data/Horário fim:</Text> {date.dateEnd.toLocaleString()}</Text>
+                                <Text className="text-lg self-center text-center"><Text className="text-lg font-bold">Data/Horário fim:</Text> {date.dateEnd.toLocaleString()}</Text>
                                 {show.showEndPicker && (
                                     <DateTimePicker
                                     testID="dateTimePicker"
@@ -193,17 +184,18 @@ export default function ManageCallsScreen() {
 
                     <View className="flex-col mb-8">
                         <View className="mb-2">
-                            <ButtonComponent action={() => {}} color={"green"} title={"CONFIRMAR"} />
+                            <Button title="CONFIRMAR" color='green' onPress={() => {}} />
                         </View>
-                        <ButtonComponent action={() => {
+                        <Button title="CANCELAR" color='red' onPress={() => {() => {
                             setModalsVisible({
                                 ...modalsVisible,
                                 scheduleCallModal: !modalsVisible.scheduleCallModal
                             });
-                        }} color={"red"} title={"CANCELAR"} />
+                        }}} />
                     </View>
                 </View>
             </Modal>
+
             <Modal 
                 animationType="slide"
                 visible={modalsVisible.startCallModal}
@@ -232,13 +224,12 @@ export default function ManageCallsScreen() {
                         ]} />
 
                         <View className="mb-8">
-                            <ButtonComponent action={() => {
+                            <Button title="ENCERRAR CHAMADA" color='red' onPress={() => {() => {
                                 setModalsVisible({
                                     ...modalsVisible,
                                     startCallModal: !modalsVisible.startCallModal
                                 });
-                            }}  color={"red"} title={"ENCERRAR CHAMADA"}                
-                            />
+                            }}} />
                         </View>
                     </View>
             </Modal>
