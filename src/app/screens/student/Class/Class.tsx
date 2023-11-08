@@ -1,6 +1,5 @@
-import { View, Text, Switch } from "react-native";
+import { View, Text, Switch, Button } from "react-native";
 import ClassCardComponent from "../../../../components/Cards/ClassCardComponent";
-import ButtonComponent from "../../../../components/Buttons/ButtonComponent";
 import TableComponent from "../../../../components/Tables/TableComponent";
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/core";
@@ -30,7 +29,7 @@ export default function ClassScreen() {
                     />
                 </View>
                 <View className="self-center w-3/4 mt-2">
-                    <ButtonComponent disabled={isEnabled} action={() => {}} color={"blue"} title={"INDICAR PRESENÇA"} />
+                    <Button title="INDICAR PRESENÇA" disabled={isEnabled} onPress={() => {}} color="blue" />
                 </View>
             </View>
 

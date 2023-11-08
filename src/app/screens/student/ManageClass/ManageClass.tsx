@@ -1,5 +1,4 @@
-import { View, Text, Modal, SafeAreaView } from "react-native";
-import ButtonComponent from "../../../../components/Buttons/ButtonComponent";
+import { View, Text, Modal, SafeAreaView, Button } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useState } from "react";
 import { TextInput } from "react-native-gesture-handler";
@@ -37,9 +36,7 @@ export default function ManageClassScreen({ route, navigation }: NativeStackScre
                 <View className="flex-col items-center justify-start h-full">
                     <Text className="text-xl px-2 py-5 self-start">Processo de abonação de falta</Text>
                     
-                    <ButtonComponent action={() => {
-                        setModalVisible(!modalVisible);
-                    }} color={"blue"} title={"SOLICITAR"} />
+                    <Button title="SOLICITAR" onPress={() => {setModalVisible(!modalVisible);}} color="blue" />
                 </View>
             </View>
             <Modal
@@ -55,8 +52,8 @@ export default function ManageClassScreen({ route, navigation }: NativeStackScre
                         <View className="py-4">
                             <View className='py-4 flex-col mb-4'>
                                 <Text className="text-base mb-4">ANEXAR ATESTADO MÉDICO (PDF):</Text>
-                                <View className='self-start'> 
-                                    <ButtonComponent action={()=>{}} color={"blue"} title={"ANEXAR ARQUIVO"} />
+                                <View className='self-start'>
+                                    <Button title="ANEXAR ARQUIVO" onPress={() => {}} color="blue" />
                                 </View>
                             </View>
                             <View>
@@ -74,11 +71,9 @@ export default function ManageClassScreen({ route, navigation }: NativeStackScre
                     </View>
                     <View className="flex-col mb-8">
                         <View className="mb-2">
-                            <ButtonComponent action={() => {}} color={"green"} title={"CONFIRMAR"} />
+                            <Button title="CONFIRMAR" onPress={() => {}} color="green" />
                         </View>
-                        <ButtonComponent action={() => {
-                            setModalVisible(!modalVisible);
-                        }} color={"red"} title={"CANCELAR"} />
+                        <Button title="CANCELAR" onPress={() => {setModalVisible(!modalVisible);}} color="red" />
                     </View>
                 </View>
             </Modal>

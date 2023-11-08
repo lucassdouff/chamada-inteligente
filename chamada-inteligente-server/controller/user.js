@@ -37,7 +37,8 @@ exports.addStudent = async (req, res, next) => {
 }
 
 exports.login = async (req, res, next) => {
-  const { email, password } = req.body;
+  const { email, password } = req.query;
+
   try {
       const user = await User.findOne({ where: { email } });
 
