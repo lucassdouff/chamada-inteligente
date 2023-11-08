@@ -2,7 +2,7 @@ const sequelize = require('../util/database');
 const { Class, Class_Student, Class_Weekday } = require('../models/models'); 
 
 exports.getClasses = async (req, res, next) => {
-    const {id, role} = req.body
+    const {id, role} = req.query;
     try {
         if (role === "teacher") {
             const classes = await getTeacherClasses(id);

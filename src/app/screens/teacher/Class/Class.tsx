@@ -15,7 +15,7 @@ export default function ClassScreen() {
     return(
         <View className="flex-col py-2 px-4 w-full mt-2 divide-gray-500 divide-y overflow-auto">
             <View className="mb-6">
-                <ClassCardComponent codigoTurma={"TCC00315"} nomeTurma={"Laboratório"} semestre={"2023/2"} staticMode additionalInfo={"2as de 7:00 às 9:00 e 4as de 9:00 às 11:00"} />
+                <ClassCardComponent idTurma={1234} codigoTurma={"TCC00315"} nomeTurma={"Laboratório"} semestre={"2023/2"} staticMode schedule={"2as de 7:00 às 9:00 e 4as de 9:00 às 11:00"} />
 
                 <View className="self-center w-3/4 mt-4">
                     <Button title="GERENCIAR CHAMADAS" color='blue' onPress={() => {navigation.navigate('Gerenciar Chamadas');}} />
