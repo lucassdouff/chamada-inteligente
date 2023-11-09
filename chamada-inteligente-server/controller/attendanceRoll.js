@@ -1,6 +1,7 @@
 const sequelize = require('../util/database');
 const { Attendance_roll } = require('../models/models');
 const { Op } = require('sequelize'); 
+const { getStudentsByClassID } = require('./class');
 
 exports.createAttendanceRoll = async (req,res,next) =>{
     const {id_class, start_datetime, end_datetime} = req.body;
@@ -35,7 +36,6 @@ exports.getAttendeesByAttendanceRoll = async (req, res, next) => {
         const presentStudents = await getAllPresentStudentsFromAttendenceRoll(id_attendance_roll);
         const vacantStudents = await getAllVacantStudentsFromAttendenceRoll(id_attendance_roll,id_class);
 
-        console.log(presentStudents,vacantStudents);
         const mappedPresentStudents = presentStudents.map((student)=>{
             return {
                 ...student,
@@ -92,4 +92,33 @@ exports.getAllScheduledAttendance = (req, res, next) => {
         res.status(500).json({ error: 'Erro ao buscar as chamadas agendadas' });
     });
 }
+
+exports.getAttendanceRollHistory = async (req, res, next) => {
+    const { id_class } = req.query;
+    try{
+        
+        const [results, metadata] = await sequelize.query(`SELECT ar.*, COUNT(a.id_student) as present_students FROM attendance_roll ar 
+        LEFT JOIN attendance a ON ar.id_attendance_roll = a.id_attendance_roll 
+        WHERE ar.id_class = ${id_class} AND ar.start_datetime < NOW() GROUP BY ar.id_attendance_roll`);
+
+        const [result] = await sequelize.query(`select COUNT(1) as count from student s join class_student cs on cs.id_student = s.id_student where cs.id_class = ${id_class};`);
+        const students = result[0].count;
+        
+        const mappedResults = results.map((result)=>{
+            return {
+                ...result,
+                percentage: (result.present_students/students)*100
+            }
+        })
+        
+        res.status(200).json(mappedResults);
+
+    } catch {error => {
+            console.error(error);
+            res.status(500).json({ error: 'Erro ao buscar o histórico de chamadas' });
+        };
+
+    }
+}
+
 
