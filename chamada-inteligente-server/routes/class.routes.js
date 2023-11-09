@@ -5,6 +5,7 @@ const classController = require('../controller/class');
 
 router.post('/', classController.addClass);
 router.get('/', classController.getClasses);
+router.get('/students', classController.getStudentsByClassID);
 router.post('/assignStudent', classController.assignStudent);
 router.put('/:id', classController.editClass);
 router.delete('/:id', classController.removeClass);
