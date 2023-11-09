@@ -1,13 +1,15 @@
 const sequelize = require('../util/database');
-const { Attendance_roll, Attendance } = require('../models/models'); 
+const { Attendance_roll } = require('../models/models');
+const { Op } = require('sequelize'); 
 
-exports.createAttendanceRoll = (req,res,next) =>{
-    const {id_class, datetime} = req.body;
+exports.createAttendanceRoll = async (req,res,next) =>{
+    const {id_class, start_datetime, end_datetime} = req.body;
 
-    const attendanceRollDatetime = datetime ? new Date(datetime) : new Date();
-    const attendanceRoll = Attendance_roll.create({
+    const attendanceRollDatetime = start_datetime ? new Date(start_datetime) : new Date();
+    const attendanceRoll = await Attendance_roll.create({
         id_class,
-        datetime: attendanceRollDatetime
+        start_datetime: attendanceRollDatetime,
+        end_datetime
     })
 
     return res.status(200).json(attendanceRoll);
@@ -77,8 +79,8 @@ exports.getAllScheduledAttendance = (req, res, next) => {
     Attendance_roll.findAll({
         where: {
             id_class: id_class,
-            datetime: {
-                [sequelize.Op.gt]: new Date() // seleciona chamadas com data/hora superior ao atual
+            start_datetime: {
+                [Op.gt]: new Date() // seleciona chamadas com data/hora superior ao atual
             }
         }
     })

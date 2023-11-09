@@ -221,12 +221,15 @@ const Attendance_roll = database.define('attendance_roll', {
             model: "class",
             key: 'id_class'
         }
-    }
-    ,
-    datetime: {
+    },
+    start_datetime: {
         type: Sequelize.DATE,
         allowNull: false
-    }
+    },
+    end_datetime: {
+        type: Sequelize.DATE,
+        allowNull: true
+    },
 }, opts);
 
 const Attendance = database.define('attendance', {
