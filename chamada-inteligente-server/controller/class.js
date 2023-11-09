@@ -126,3 +126,40 @@ exports.getStudentsByClassID = async (req, res, next) => {
     }
 
 }
+
+exports.getClassStats = async (req, res, next) => {
+    const { id_class } = req.query;
+    try{
+        const count = await countStudentsInClass(id_class);
+
+        const [attendanceCount] = await sequelize.query(`select count(1) as count from attendance a join attendance_roll ar on ar.id_attendance_roll = a.id_attendance_roll where ar.id_class = ${id_class};`);
+        const [attendanceRollCount] = await sequelize.query(`select count(1) as count from attendance_roll where id_class = ${id_class} and end_datetime < now()`);
+
+
+        console.log()
+
+        const result = {
+            totalStudents: count,
+            attendancePercentage: (attendanceCount[0].count/attendanceRollCount[0].count)
+        }
+
+        return res.status(200).json(result);
+    } catch {
+        res.status(500).json({error: "An error occurred while getting class stats"});
+    }
+}
+
+
+const countStudentsInClass = async (id_class) => {
+    try {
+        const [result] = await sequelize.query(`select COUNT(1) as count from student s join class_student cs on cs.id_student = s.id_student where cs.id_class = ${id_class};`);
+        const students = result[0].count;
+
+
+        return students;
+    } catch {
+        return 0;
+    }
+}
+
+exports.countStudentsInClass = countStudentsInClass;

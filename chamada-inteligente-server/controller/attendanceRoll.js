@@ -1,7 +1,7 @@
 const sequelize = require('../util/database');
 const { Attendance_roll } = require('../models/models');
 const { Op } = require('sequelize'); 
-const { getStudentsByClassID } = require('./class');
+const { countStudentsInClass } = require('./class');
 
 exports.createAttendanceRoll = async (req,res,next) =>{
     const {id_class, start_datetime, end_datetime} = req.body;
@@ -101,13 +101,12 @@ exports.getAttendanceRollHistory = async (req, res, next) => {
         LEFT JOIN attendance a ON ar.id_attendance_roll = a.id_attendance_roll 
         WHERE ar.id_class = ${id_class} AND ar.start_datetime < NOW() GROUP BY ar.id_attendance_roll`);
 
-        const [result] = await sequelize.query(`select COUNT(1) as count from student s join class_student cs on cs.id_student = s.id_student where cs.id_class = ${id_class};`);
-        const students = result[0].count;
+        const count = await countStudentsInClass(id_class);
         
         const mappedResults = results.map((result)=>{
             return {
                 ...result,
-                percentage: (result.present_students/students)*100
+                percentage: (result.present_students/count)*100
             }
         })
         
