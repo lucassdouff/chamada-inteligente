@@ -8,12 +8,16 @@ interface TableComponentProps {
 
 export default function TableComponent({ tableData } : TableComponentProps) {
 
+    const tableDataWithoutRemoveLine = tableData?.map((arrList) => (
+        arrList.filter((item) => !item.removeLine)
+    ));
+
     return (
         <View className="w-full">
             <ScrollView horizontal={true}>
                 <View className="flex-col border divide-y"> 
                     {
-                        tableData?.map((arrList) => (
+                        tableDataWithoutRemoveLine?.map((arrList) => (
                             <View className="flex-row divide-x">
                                 {
                                     arrList.map((item) => (
