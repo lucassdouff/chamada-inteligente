@@ -7,7 +7,7 @@ export type StackParamList = {
     Class: { classID: string};
 }
 
-export default function ManageClassScreen({ route, navigation }: NativeStackScreenProps<StackParamList, 'Class'>) {
+export default function ManageClassScreen({ route }: NativeStackScreenProps<StackParamList, 'Class'>) {
 
     const [modalVisible, setModalVisible] = useState(false);
 

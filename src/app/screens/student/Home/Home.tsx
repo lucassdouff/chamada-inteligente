@@ -41,11 +41,7 @@ export default function HomeScreen() {
                 userClasses?.map((userClass) => {
                     return(            
                         <ClassCardComponent
-                            key={userClass.idClass}
-                            idTurma={userClass.idClass}
-                            codigoTurma={userClass.code}
-                            nomeTurma={userClass.name}
-                            semestre={userClass.semester}
+                            userClass={userClass}
                         />
                     );
                 })

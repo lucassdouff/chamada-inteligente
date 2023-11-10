@@ -1,11 +1,11 @@
 
 export interface UserClassesDTO {
-    idClass: number,
+    id_class: number,
     name: string,
-    classSchedule: Date,
+    class_schedule: Date,
     code: string,
     duration: number,
     semester: string,
-    idTeacher: number,
-    idCourse: number
+    id_teacher: number,
+    id_course: number
 }
