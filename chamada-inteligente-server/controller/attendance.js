@@ -1,4 +1,6 @@
 const { Attendance, Attendance_roll, Class, Class_Student } = require('../models/models');
+const { Op, DATE } = require('sequelize');
+const sequelize = require('../util/database');
 
 exports.createAttendance = async(req, res, next) => {
     const {medical_certificate, id_attendance_roll, id_student} = req.body
@@ -72,20 +74,15 @@ exports.getStudentAttendanceStats = async (req, res, next) => {
         });
 
         // Buscar todas as Attendance do aluno para essa class com detalhes do Attendance_roll
-        const studentAttendancesDetails = await Attendance.findAll({
-            where: { id_student },
-            include: [{
-                model: Attendance_roll,
-                attributes: ['datetime'],
-                required: true, // Inner join
-                where: { id_class }
-            }]
-        });        
+        const response = await sequelize.query(`Select a.*, ar.start_datetime from attendance a 
+        join attendance_roll ar on a.id_attendance_roll = ar.id_attendance_roll where a.id_student = ${id_student} and ar.id_class = ${id_class}`);
+
+        const studentAttendancesDetails = response[0];
 
         // Calcular o tempo total de ausencia do aluno
         let totalAbsenceTime = 0;
         studentAttendancesDetails.forEach(attendance => {
-            const classStartTime = new Date(attendance.Attendance_roll.datetime);
+            const classStartTime = new Date(attendance.start_datetime);
 
             // Convertendo Sequelize.TIME para uma data js
             const [hours, minutes] = attendance.hour.split(':').map(Number);
@@ -106,7 +103,7 @@ exports.getStudentAttendanceStats = async (req, res, next) => {
         }
 
         // Tempo medio de presenca
-        const averagePresenceTime = classDetails.duration - averageAbsenceTime;
+        const averagePresenceTime = (classDetails.duration * 60) - averageAbsenceTime;
 
         // Percentual de faltas
         const absencePercentage = totalClassSessions ? ((totalClassSessions - studentAttendancesDetails.length) / totalClassSessions) * 100 : 0;
