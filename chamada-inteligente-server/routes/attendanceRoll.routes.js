@@ -6,7 +6,8 @@ const attendanceRollController = require('../controller/attendanceRoll');
 router.post('/', attendanceRollController.createAttendanceRoll);
 router.delete('/:id', attendanceRollController.deleteAttendanceRoll);
 router.get('/atendees',attendanceRollController.getAttendeesByAttendanceRoll);
-router.get('/history',attendanceRollController.getAttendanceRollHistory);
+router.get('/history/student',attendanceRollController.getStudentAttendanceRollHistory);
+router.get('/history/teacher',attendanceRollController.getTeacherAttendanceRollHistory);
 router.get('/upcoming/:id_class', attendanceRollController.getAllScheduledAttendance);
 
 
