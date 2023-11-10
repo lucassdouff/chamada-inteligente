@@ -20,7 +20,7 @@ export default function TableComponent({ tableData } : TableComponentProps) {
                                         <View className="flex items-center justify-center">
                                             {
                                                 item.action ? 
-                                                <View className="m-2 py-1.5 px-2">
+                                                <View className="m-4 py-1.5 px-2">
                                                     <Button title={item.text} color='blue' onPress={item.action} />
                                                 </View>
                                                 : <Text className="m-2 w-24 py-1.5 px-2 text-center">{item.text}</Text>
