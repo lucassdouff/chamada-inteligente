@@ -119,7 +119,8 @@ exports.removeClass = async (req, res, next) => {
 exports.getStudentsByClassID = async (req, res, next) => {
     const { id_class } = req.query;
     try{
-        const [results, metadata] = await sequelize.query(`select s.* from student s join class_student cs on cs.id_student = s.id_student where cs.id_class = ${id_class};`);
+        const [results, metadata] = await sequelize.query(`select s.*,u.name from student s 
+        join class_student cs on cs.id_student = s.id_student JOIN user u on u.id_user = s.id_student where cs.id_class = ${id_class};`);
         return res.status(200).json(results);
     } catch {
         res.status(500).json({error: "An error occurred while getting students"});
