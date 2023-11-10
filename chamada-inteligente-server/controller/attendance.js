@@ -79,6 +79,8 @@ exports.getStudentAttendanceStats = async (req, res, next) => {
 
         const studentAttendancesDetails = response[0];
 
+
+
         // Calcular o tempo total de ausencia do aluno
         let totalAbsenceTime = 0;
         studentAttendancesDetails.forEach(attendance => {
@@ -97,7 +99,7 @@ exports.getStudentAttendanceStats = async (req, res, next) => {
         const classDetails = await Class.findByPk(id_class);
 
         // Tempo medio de ausencia
-        let averageAbsenceTime = 0;
+        let averageAbsenceTime = (classDetails.duration * 60);
         if (studentAttendancesDetails.length > 0) {
             averageAbsenceTime = totalAbsenceTime / studentAttendancesDetails.length;
         }
