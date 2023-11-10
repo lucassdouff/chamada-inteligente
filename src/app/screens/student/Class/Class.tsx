@@ -1,22 +1,95 @@
 import { View, Text, Switch, Button } from "react-native";
 import ClassCardComponent from "../../../../components/Cards/ClassCardComponent";
 import TableComponent from "../../../../components/Tables/TableComponent";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/core";
 import { StackNavigationProp } from "@react-navigation/stack";
-        
-export default function ClassScreen() {
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { UserClassesDTO } from "../../../../core/dtos/UserClassesDTO";
+import axios from "axios";
+import { navigationController } from "../../../../core/controllers/NavigationController";
+import { StudentAttendanceStatsDTO } from "../../../../core/dtos/StudentAttendanceStatsDTO";
+import { StudentRollHistoryDTO } from "../../../../core/dtos/StudentRollHistoryDTO";
+import { TableDataModel } from "../../../../core/models/TableDataModel";
+import moment from "moment";
+
+export type StackParamList = {
+    Class: { userClass: UserClassesDTO};
+}
+
+export default function ClassScreen({ route }: NativeStackScreenProps<StackParamList, 'Class'>) {
 
     const [isEnabled, setIsEnabled] = useState(false);
+    const [studentAttendanceStats, setStudentAttendanceStats] = useState<StudentAttendanceStatsDTO>();
+    const [studentRollHistory, setStudentRollHistory] = useState<TableDataModel[][]>();
 
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+    
+    const { userSession } = navigationController();
+    const { userClass } = route.params
 
+    useEffect(() => {
+        const fetchStudentAttendanceStats = async () => {
+            const response = await axios.get<StudentAttendanceStatsDTO>(`http://192.168.0.141:3000/attendance/stats/${userClass.id_class}/${userSession?.id}`)
+                .catch(error => {console.log(error.response.data)});
+            
+            const userAttendanceStats : StudentAttendanceStatsDTO | undefined = response?.data;
+
+            setStudentAttendanceStats(userAttendanceStats);
+        };
+
+        const fetchStudentRollHistory = async () => {
+            try {
+                const response = await axios.get<StudentRollHistoryDTO[]>(`http://192.168.0.141:3000/attendanceRoll/history/student`, {
+                    params: {
+                        id_class: userClass.id_class,
+                        id_student: userSession?.id
+                    }
+                });
+
+                const userAttendanceRollHistory : StudentRollHistoryDTO[] | undefined = response?.data;
+
+                const history : TableDataModel[][] = [
+                    [{text: 'DATA', action: undefined}, {text: 'HORÁRIO', action: undefined}, {text: 'PRESENÇA', action: undefined}, {text: '', action: undefined}],
+                ];
+
+                userAttendanceRollHistory?.forEach(attendance => {
+                    if(attendance.end_datetime) {
+                        const historyItem = [
+                            {text: new Date(attendance.start_datetime).toLocaleDateString(), action: undefined},
+                            {text: moment(attendance.start_datetime).format("LT") + " - " + moment(attendance.end_datetime).format("LT"), action: undefined},
+                            {text: attendance.present ? 'PRESENTE' : 'AUSENTE', action: undefined},
+                            {text: 'CONSULTAR', action: () => {
+                                navigation.navigate('Consultar Aula', {
+                                    classID: attendance.id_class
+                                });
+                            }}
+                        ];
+    
+                        history.push(historyItem || []);
+                    }
+                });
+
+                setStudentRollHistory(history);
+
+            } catch (error) {
+                console.log(error);
+            };
+
+        }
+    
+        fetchStudentRollHistory();
+        
+        fetchStudentAttendanceStats();
+
+    }, [userClass.id_class, userSession?.id]);
+   
     const navigation = useNavigation<StackNavigationProp<any>>();
     
     return(
         <View className="flex-col py-2 px-4 w-full mt-2 divide-gray-500 divide-y overflow-auto">
             <View className="mb-6">
-                <ClassCardComponent idTurma={1234} codigoTurma={"TCC00315"} nomeTurma={"Laboratório"} semestre={"2023/2"} staticMode schedule={"2as de 7:00 às 9:00 e 4as de 9:00 às 11:00"} />
+                <ClassCardComponent userClass={userClass} staticMode schedule={userClass.class_schedule} />
 
                 <View className="flex-row justify-between items-center px-2">
                     <Text className="text-lg">Presença Automática:</Text>
@@ -38,15 +111,15 @@ export default function ClassScreen() {
                 <View className="flex-col gap-4 p-2">
                     <View className="flex-row justify-between">
                         <Text>Total de faltas:</Text>
-                        <Text>1</Text>
+                        <Text>{studentAttendanceStats?.totalAbsences} falta(s)</Text>
                     </View>
                     <View className="flex-row justify-between">
                         <Text>Percentual de faltas:</Text>
-                        <Text>20%</Text>
+                        <Text>{studentAttendanceStats?.absencePercentage}%</Text>
                     </View>
                     <View className="flex-row justify-between">
                         <Text>Tempo médio de presença:</Text>
-                        <Text>40 min</Text>
+                        <Text>{studentAttendanceStats?.averagePresenceTime} min</Text>
                     </View>
                 </View>
             </View>
@@ -54,20 +127,7 @@ export default function ClassScreen() {
             <View className="flex-col">
                 <Text className="my-4 text-xl">Histórico de aulas</Text>
                 <View className="self-center">
-                    <TableComponent tableData={[
-                        [{text: 'DATA', action: undefined}, {text: 'HORÁRIO', action: undefined}, {text: 'PRESENÇA', action: undefined}, {text: '', action: undefined}],
-                        [{text: '17/10/2023', action: undefined}, {text: '7:00-9:00', action: undefined}, {text: 'PRESENTE', action: undefined}, {text: 'CONSULTAR', action: () => {
-                            navigation.navigate('Consultar Aula', {
-                                classID: '123456788'
-                            });
-                        }}],
-                        [{text: '19/10/2023', action: undefined}, {text: '7:00-9:00', action: undefined}, {text: 'AUSENTE', action: undefined}, {text: 'CONSULTAR', action: () => {
-                            navigation.navigate('Consultar Aula', {
-                                classID: '123456789'
-                            });
-                        }}]
-                        ]} 
-                    />
+                    <TableComponent tableData={studentRollHistory} />
                 </View>
             </View>
         </View>

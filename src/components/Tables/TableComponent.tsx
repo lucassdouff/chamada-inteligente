@@ -3,7 +3,7 @@ import { ScrollView, View, Text, Button } from "react-native";
 import { TableDataModel } from "../../core/models/TableDataModel";
 
 interface TableComponentProps {
-    tableData: TableDataModel[][];
+    tableData: TableDataModel[][] | undefined;
 }
 
 export default function TableComponent({ tableData } : TableComponentProps) {
@@ -13,7 +13,7 @@ export default function TableComponent({ tableData } : TableComponentProps) {
             <ScrollView horizontal={true}>
                 <View className="flex-col border divide-y"> 
                     {
-                        tableData.map((arrList) => (
+                        tableData?.map((arrList) => (
                             <View className="flex-row divide-x">
                                 {
                                     arrList.map((item) => (
