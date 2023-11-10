@@ -4,6 +4,7 @@ const router = express.Router();
 const attendanceRollController = require('../controller/attendanceRoll');
 
 router.post('/', attendanceRollController.createAttendanceRoll);
+router.put("/end", attendanceRollController.endAttendanceRoll);
 router.delete('/:id', attendanceRollController.deleteAttendanceRoll);
 router.get('/atendees',attendanceRollController.getAttendeesByAttendanceRoll);
 router.get('/history/student',attendanceRollController.getStudentAttendanceRollHistory);
