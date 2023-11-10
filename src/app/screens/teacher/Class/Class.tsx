@@ -59,6 +59,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                 ];
 
                 userAttendanceRollHistory?.forEach(attendance => {
+                    if(attendance.end_datetime) {
                         const historyItem = [
                             {text: new Date(attendance.start_datetime).toLocaleDateString(), action: undefined},
                             {text: moment(attendance.start_datetime).format("LT") + " - " + moment(attendance.end_datetime).format("LT"), action: undefined},
@@ -68,6 +69,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                         ];
     
                         history.push(historyItem || []);
+                    }
                 });
 
                 setTeacherRollHistory(history);
@@ -89,7 +91,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                 <ClassCardComponent userClass={userClass} staticMode schedule={userClass.class_schedule} />
 
                 <View className="self-center w-3/4 mt-4">
-                    <Button title="GERENCIAR CHAMADAS" color='blue' onPress={() => {navigation.navigate('Gerenciar Chamadas');}} />
+                    <Button title="GERENCIAR CHAMADAS" color='blue' onPress={() => {navigation.navigate('Gerenciar Chamadas', {userClass: userClass});}} />
                 </View>
             </View>
 
