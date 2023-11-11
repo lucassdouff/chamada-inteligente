@@ -39,13 +39,30 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
             text: 'CANCELAR',
             onPress: () => console.log('Cancel Pressed'),
             style: 'cancel',
-          },
-          {
-            text: 'AUSENTE',
-            onPress: () => console.log('Presence changed to ABSENT'),
-            
-          },
-          {text: 'PRESENTE', onPress: () => console.log('Presence changed to PRESENT')},
+        },
+        {
+        text: 'AUSENTE',
+        onPress: () => {
+            setAttendenceList((prevState) => {
+                const newState = prevState ? [...prevState] : [];
+                const index = newState.findIndex((item) => item.id === id_student);
+                newState[index] = { ...newState[index], info: { description: 'AUSENTE', action: () => {changeAttendenceAlert(id_student)} } };
+                return newState;
+            });
+        },
+        
+        },
+        {
+        text: 'PRESENTE', 
+        onPress: () => {
+            setAttendenceList((prevState) => {
+                const newState = prevState ? [...prevState] : [];
+                const index = newState.findIndex((item) => item.id === id_student);
+                newState[index] = { ...newState[index], info: { description: 'PRESENTE', action: () => {changeAttendenceAlert(id_student)} } };
+                return newState;
+            });
+        }
+        },
     ]);
 
     const handleAttendenceRoll = (attendence_id: number) => {
@@ -63,6 +80,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
 
             const attendenceListMapped : ListDataModel[] | undefined = userAttendenceList?.map(attendence => {
                 return {
+                    id: attendence.id_student,
                     name: attendence.id_student.toString(),
                     info: {
                         description: attendence.present ? 'PRESENTE' : 'AUSENTE',
