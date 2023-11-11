@@ -1,5 +1,4 @@
 export type ListItemModel = {
-    percent?: number;
-    present?: boolean;
+    description: string;
     action?: () => void;
 }

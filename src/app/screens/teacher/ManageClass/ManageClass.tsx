@@ -7,6 +7,7 @@ export default function ManageClassScreen() {
             <View className="mb-6">
                 <ListComponent listType={"teacher"} listData={[
                     {
+                        id: 1,
                         name: 'Roberto Carlos',
                     }
                 ]} />
@@ -14,15 +15,17 @@ export default function ManageClassScreen() {
 
             <ListComponent listType={"student"} listData={[
                 {
+                    id: 1,
                     name: 'Roberto Carlos Filho',
                     info: {
-                        percent: 44,
+                        description: '75',
                     }
                 },
                 {
+                    id: 2,
                     name: 'Roberto Carlos Filho Júnior',
                     info: {
-                        percent: 75,
+                        description: '45',
                     }
                 }
             ]} />
