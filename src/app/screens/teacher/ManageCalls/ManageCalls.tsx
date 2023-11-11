@@ -25,7 +25,7 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
 
         const createScheduledRoll = async () => {
             try {
-                const response = await axios.post<ScheduledRollHistoryDTO>(`http://192.168.0.141:3000/attendanceRoll`, 
+                const response = await axios.post<ScheduledRollHistoryDTO>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendanceRoll`, 
                     {
                         id_class: userClass.id_class,
                         start_datetime: date.dateStart,
@@ -161,7 +161,7 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
 
         const deleteAttendenceRoll = async () => {
             try {
-                const response = await axios.delete(`http://192.168.0.141:3000/attendanceRoll/${attendence_id}`);
+                const response = await axios.delete(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendanceRoll/${attendence_id}`);
 
                 setScheduledRollHistory((prevScheduledRollHistory) => {
                     const newScheduledRollHistory = prevScheduledRollHistory?.filter((item) => {
@@ -184,7 +184,7 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
 
         const fetchScheduledRollHistory = async () => {
             try {
-                const response = await axios.get<ScheduledRollHistoryDTO[]>(`http://192.168.0.141:3000/attendanceRoll/upcoming/${userClass.id_class}`);
+                const response = await axios.get<ScheduledRollHistoryDTO[]>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendanceRoll/upcoming/${userClass.id_class}`);
 
                 const userAttendanceRollHistory : ScheduledRollHistoryDTO[] | undefined = response?.data;
 
