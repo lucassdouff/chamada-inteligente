@@ -118,7 +118,26 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                         start_datetime: new Date(),
                     },
                 );
-                console.log(response.data)
+
+                const userAttendanceRoll : TeacherRollHistoryDTO | undefined = response?.data;
+
+                setTeacherRollHistory((prevState) => {
+                    const newState = prevState ? [...prevState] : [];
+                    const historyItem = [
+                        {text: new Date(userAttendanceRoll?.start_datetime).toLocaleDateString(), action: undefined},
+                        {text: moment(userAttendanceRoll?.start_datetime).format("LT"), action: undefined},
+                        {text: "0", action: undefined},
+                        {text: "0%", action: undefined},
+                        {text: 'CONSULTAR', action: () => {
+                            handleAttendenceRoll(userAttendanceRoll?.id_attendance_roll);
+                        }}
+                    ];
+
+                    newState.push(historyItem || []);
+
+                    return newState;
+                });
+                
                 if(response.status === 200) {
                     Alert.alert('CHAMADA INICIADA', 'A chamada foi iniciada com sucesso!');
                 }
