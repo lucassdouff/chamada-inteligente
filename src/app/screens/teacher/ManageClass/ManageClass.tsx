@@ -1,9 +1,9 @@
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import ListComponent from "../../../../components/Lists/ListComponent";
 
 export default function ManageClassScreen() {
     return (
-        <View className="flex-col py-2 px-4 w-full mt-2 overflow-auto">
+        <ScrollView className="flex-col py-2 px-4 w-full mt-2 overflow-auto">
             <View className="mb-6">
                 <ListComponent listType={"teacher"} listData={[
                     {
@@ -29,6 +29,6 @@ export default function ManageClassScreen() {
                     }
                 }
             ]} />
-        </View>
+        </ScrollView>
     )
 }
