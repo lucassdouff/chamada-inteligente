@@ -1,7 +1,6 @@
 import { ListItemModel } from "./ListItemModel";
 
 export type ListDataModel={
-    name:string;
-    photo?:string;
+    name: string;
     info?: ListItemModel;
 }
