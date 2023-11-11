@@ -1,5 +1,5 @@
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Text, View, Image, Button } from "react-native";
+import { Text, View, Image, Button, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import axios from 'axios';
 import { Control, FieldValues, useController, useForm } from 'react-hook-form';
@@ -60,7 +60,7 @@ export default function LoginScreen() {
     }
 
     return(
-        <View className="w-full flex-1 p-4 justify-center">
+        <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }} className="w-full flex-1 p-4">
             <Image className="self-center mb-10" source={require('../../../../assets/logoIdUFF.png')} style={{width: 140, height: 150}}/>
             <Text className="self-center mb-10 text-xl">Acesso aos sistemas da UFF</Text>
 
@@ -69,6 +69,6 @@ export default function LoginScreen() {
             <Text className="mb-2">Senha</Text>
             <Input name='password' control={control} />
             <Button title="ACESSAR" onPress={handleSubmit(onSubmit)} />
-        </View>
+        </ScrollView>
     )
 }

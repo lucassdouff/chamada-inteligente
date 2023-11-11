@@ -17,11 +17,11 @@ export default function TableComponent({ tableData } : TableComponentProps) {
             <ScrollView horizontal={true}>
                 <View className="flex-col border divide-y"> 
                     {
-                        tableDataWithoutRemoveLine?.map((arrList) => (
-                            <View className="flex-row divide-x">
+                        tableDataWithoutRemoveLine?.map((arrList,index) => (
+                            <View key={index} className="flex-row divide-x">
                                 {
-                                    arrList.map((item) => (
-                                        <View className="flex items-center justify-center">
+                                    arrList.map((item,index) => (
+                                        <View key={index} className="flex items-center justify-center">
                                             {
                                                 item.action ? 
                                                 <View className="m-4 py-1.5 px-2">

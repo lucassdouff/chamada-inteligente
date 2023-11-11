@@ -1,4 +1,4 @@
-import { View, Text, Modal, SafeAreaView, Button } from "react-native";
+import { View, Text, Modal, SafeAreaView, Button, ScrollView } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useState } from "react";
 import { TextInput } from "react-native-gesture-handler";
@@ -18,7 +18,7 @@ export default function ManageClassScreen({ route }: NativeStackScreenProps<Stac
     const { attendance_id, start_date, presence } = route.params
 
     return(
-        <View className="flex-col py-2 px-4 w-full mt-2 overflow-y-auto h-full">
+        <ScrollView className="flex-col py-2 px-4 w-full mt-2 overflow-y-auto h-full">
             <View className="divide-gray-500 divide-y">
                 <Text className="text-xl px-2 py-1 mb-4">Aula do dia {moment(start_date).format('L')}</Text>
 
@@ -75,6 +75,6 @@ export default function ManageClassScreen({ route }: NativeStackScreenProps<Stac
                     </View>
                 </View>
             </Modal>
-        </View>
+        </ScrollView>
     )
 }

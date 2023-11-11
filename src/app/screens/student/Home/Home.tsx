@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import ClassCardComponent from "../../../../components/Cards/ClassCardComponent";
 import { navigationController } from "../../../../core/controllers/NavigationController";
 import axios from "axios";
@@ -36,16 +36,16 @@ export default function HomeScreen() {
     }, [userSession, navigation]);
 
     return(
-        <View className="py-2 px-4 w-full mt-2">
+        <ScrollView className="py-2 px-4 w-full mt-2">
             {
                 userClasses?.map((userClass) => {
                     return(            
-                        <ClassCardComponent
+                        <ClassCardComponent key={userClass.id_class}
                             userClass={userClass}
                         />
                     );
                 })
             }
-        </View>
+        </ScrollView>
     );
 }

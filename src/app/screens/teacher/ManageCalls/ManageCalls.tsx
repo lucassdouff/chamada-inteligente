@@ -1,4 +1,4 @@
-import { View, Text, Modal, Button, Alert } from "react-native";
+import { View, Text, Modal, Button, Alert, ScrollView } from "react-native";
 import TableComponent from "../../../../components/Tables/TableComponent";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -216,7 +216,7 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
     }, [userClass.id_class]);
 
     return(
-        <View className="flex-col py-2 px-4 w-full mt-2 overflow-auto h-full justify-between">
+        <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-between' }} className="flex-col py-2 px-4 w-full mt-2 overflow-auto h-full">
             <View className="divide-gray-500 divide-y">
                 <Text className="text-xl py-1">Chamadas Agendadas</Text>
 
@@ -319,6 +319,6 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
                     </View>
                 </View>
             </Modal>
-        </View>
+        </ScrollView>
     )
 }

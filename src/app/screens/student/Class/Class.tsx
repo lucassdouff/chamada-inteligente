@@ -1,4 +1,4 @@
-import { View, Text, Switch, Button } from "react-native";
+import { View, Text, Switch, Button, ScrollView } from "react-native";
 import ClassCardComponent from "../../../../components/Cards/ClassCardComponent";
 import TableComponent from "../../../../components/Tables/TableComponent";
 import { useEffect, useState } from "react";
@@ -90,7 +90,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
     const navigation = useNavigation<StackNavigationProp<any>>();
     
     return(
-        <View className="flex-col py-2 px-4 w-full mt-2 divide-gray-500 divide-y overflow-auto">
+        <ScrollView className="flex-col py-2 px-4 w-full mt-2 divide-gray-500 divide-y overflow-auto">
             <View className="mb-6">
                 <ClassCardComponent userClass={userClass} staticMode schedule={userClass.class_schedule} />
 
@@ -133,6 +133,6 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                     <TableComponent tableData={studentRollHistory} />
                 </View>
             </View>
-        </View>
+        </ScrollView>
     );
 }
