@@ -54,18 +54,12 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
             };
         };
         
-        setModalsVisible({
-            ...modalsVisible,
-            scheduleCallModal: !modalsVisible.scheduleCallModal
-        });
+        setModalVisible(!modalVisible);
 
         createScheduledRoll();
     }
 
-    const [modalsVisible, setModalsVisible] = useState({
-        scheduleCallModal: false,
-        startCallModal: false
-    })
+    const [modalVisible, setModalVisible] = useState(false)
 
     const [date, setDate] = useState({
         dateStart: new Date(),
@@ -81,15 +75,21 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
     });
   
     const onDateChange = (event: DateTimePickerEvent, selectedDate: Date | undefined) => {
-        const currentDate = selectedDate;
+        let year = selectedDate?.getFullYear();
+        let month = selectedDate?.getMonth()! + 1;
+        let day = selectedDate?.getDate();
+        
+        const dateString = '' + year + '-' + month + '-' + day;
+        const timeString = new Date().getHours() + ':' + new Date().getMinutes() + ':00';
+
         setShow({
             showEndTimePicker: false,
             showStartTimePicker: false,
             showDatePicker: false,
         });
         setDate({
-            dateStart: currentDate!,
-            dateEnd: currentDate!
+            dateStart: new Date(dateString + ' ' + timeString),
+            dateEnd: new Date(dateString + ' ' + timeString)
         });
     };
 
@@ -180,21 +180,6 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
       }},
     ]);
 
-    const startCallAlert = () =>
-    Alert.alert('INICIAR CHAMADA', 'Tem certeza que quer iniciar uma chamada?', [
-      {
-        text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
-        style: 'cancel',
-      },
-      {text: 'OK', onPress: () => {
-        setModalsVisible({
-            ...modalsVisible,
-            startCallModal: !modalsVisible.startCallModal
-        });
-      }},
-    ]);
-
     useEffect(() => {
 
         const fetchScheduledRollHistory = async () => {
@@ -242,24 +227,17 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
 
             <View className="flex-col mb-8">
                 <View className="mb-2">
-                    <Button title="INICIAR CHAMADA" color='blue' onPress={startCallAlert} />
+                    <Button title="AGENDAR NOVA CHAMADA" color='green' onPress={() => {
+                        setModalVisible(!modalVisible);
+                    }} />             
                 </View>
-                <Button title="AGENDAR CHAMADA" color='green' onPress={() => {
-                    setModalsVisible({
-                        ...modalsVisible,
-                        scheduleCallModal: !modalsVisible.scheduleCallModal
-                    });
-                }} />
             </View>
 
             <Modal
                 animationType="slide"
-                visible={modalsVisible.scheduleCallModal}
+                visible={modalVisible}
                 onRequestClose={() => {
-                setModalsVisible({
-                    ...modalsVisible,
-                    scheduleCallModal: !modalsVisible.scheduleCallModal
-                });
+                setModalVisible(!modalVisible);
                 }}>
                 <View className="flex-col justify-between h-full py-2 px-4 w-full mt-2 overflow-y-auto">
 
@@ -271,7 +249,7 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
                             <View className="mb-4">
                                 <View className="flex-row items-center justify-evenly mb-4">
                                     <View className="w-1/2 flex-col mb-2">
-                                        <Text className="text-base text-center my-4">Definir data:</Text>
+                                        <Text className="text-base text-center my-4">Definir data e redefinir horários:</Text>
                                         <Button title="DATA" color='blue' onPress={() => {showDatepicker('start');}} />
                                     </View>
                                 </View>
@@ -336,51 +314,10 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
                             <Button title="CONFIRMAR" color='green' onPress={handleCreateScheduledRoll} />
                         </View>
                         <Button title="CANCELAR" color='red' onPress={() => {
-                            setModalsVisible({
-                                ...modalsVisible,
-                                scheduleCallModal: !modalsVisible.scheduleCallModal
-                            });
+                            setModalVisible(!modalVisible);
                         }} />
                     </View>
                 </View>
-            </Modal>
-
-            <Modal 
-                animationType="slide"
-                visible={modalsVisible.startCallModal}
-                onRequestClose={() => {
-                setModalsVisible({
-                    ...modalsVisible,
-                    startCallModal: !modalsVisible.startCallModal
-                });
-                }}>
-                    <View className="flex-col justify-between h-full py-2 px-4 w-full mt-2 overflow-auto">
-                        <ListComponent listType={"student"} listData={[
-                            {
-                                name: 'Roberto Carlos Filho',
-                                info: {
-                                    present: true,
-                                    action: () => {}
-                                }
-                            },
-                            {
-                                name: 'Roberto Carlos Filho Júnior',
-                                info: {
-                                    present: false,
-                                    action: () => {}
-                                }
-                            }
-                        ]} />
-
-                        <View className="mb-8">
-                            <Button title="ENCERRAR CHAMADA" color='red' onPress={() => {
-                                setModalsVisible({
-                                    ...modalsVisible,
-                                    startCallModal: !modalsVisible.startCallModal
-                                });
-                            }} />
-                        </View>
-                    </View>
             </Modal>
         </View>
     )

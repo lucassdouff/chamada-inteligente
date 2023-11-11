@@ -15,6 +15,7 @@ import { TeacherRollHistoryDTO } from "../../../../core/dtos/TeacherRollHistoryD
 import moment from "moment";
 import { AttendenceListItemDTO } from "../../../../core/dtos/AttendenceListItemDTO";
 import { ListDataModel } from "../../../../core/models/ListDataModel";
+import { ScrollView } from "react-native-gesture-handler";
 
 export type StackParamList = {
     Class: { userClass: UserClassesDTO};
@@ -99,6 +100,39 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
         setModalVisible(!modalVisible);
     };
 
+    const startCallAlert = () =>
+    Alert.alert('INICIAR CHAMADA', 'Tem certeza que quer iniciar uma chamada?', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'OK', onPress: () => {
+
+        const createAttendenceRoll = async () => {
+            try {
+                const response = await axios.post<TeacherRollHistoryDTO>(`http://192.168.0.141:3000/attendanceRoll`, 
+                    {
+                        id_class: userClass.id_class,
+                        start_datetime: new Date(),
+                    },
+                );
+                console.log(response.data)
+                if(response.status === 200) {
+                    Alert.alert('CHAMADA INICIADA', 'A chamada foi iniciada com sucesso!');
+                }
+
+            } catch (error) {
+                console.log(error);
+            };
+        };
+
+        createAttendenceRoll();
+        }
+      },
+    ]);
+
     useEffect(() => {
         const fetchClassStats = async () => {
             const response = await axios.get<ClassStatsDTO>(`http://192.168.0.141:3000/class/stats`, {
@@ -131,7 +165,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                     if(new Date(attendance.start_datetime) <= new Date()) {
                         const historyItem = [
                             {text: new Date(attendance.start_datetime).toLocaleDateString(), action: undefined},
-                            {text: moment(attendance.start_datetime).format("LT") + " - " + moment(attendance.end_datetime).format("LT"), action: undefined},
+                            {text: moment(attendance.start_datetime).format("LT") + (attendance.end_datetime ? " - " + moment(attendance.end_datetime).format("LT") : ''), action: undefined},
                             {text: attendance.present_students.toString(), action: undefined},
                             {text: attendance.percentage + '%', action: undefined},
                             {text: 'CONSULTAR', action: () => {
@@ -157,12 +191,15 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
     }, [userClass.id_class, userSession?.id, modalVisible]);
 
     return(
-        <View className="flex-col py-2 px-4 w-full mt-2 divide-gray-500 divide-y overflow-auto">
+        <ScrollView className="flex-col py-2 px-4 w-full mt-2 divide-gray-500 divide-y overflow-auto">
             <View className="mb-6">
                 <ClassCardComponent userClass={userClass} staticMode schedule={userClass.class_schedule} />
 
                 <View className="self-center w-3/4 mt-4">
-                    <Button title="GERENCIAR CHAMADAS" color='blue' onPress={() => {navigation.navigate('Gerenciar Chamadas', {userClass: userClass});}} />
+                <View className="mb-2">
+                    <Button title="INICIAR CHAMADA" color='blue' onPress={startCallAlert} />
+                </View>
+                    <Button title="AGENDAR CHAMADA" color='orange' onPress={() => {navigation.navigate('Gerenciar Chamadas', {userClass: userClass});}} />
                 </View>
             </View>
 
@@ -180,7 +217,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                 </View>
             </View>
 
-            <View className="flex-col">
+            <View className="flex-col mb-4">
                 <Text className="my-4 text-xl">Histórico de chamadas</Text>
                 <View className="self-center">
                     <TableComponent tableData={teacherRollHistory} />
@@ -204,6 +241,6 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                     </View>
                 </View>
             </Modal>
-        </View>
+        </ScrollView>
     );
 }
