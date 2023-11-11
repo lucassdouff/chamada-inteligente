@@ -1,7 +1,7 @@
 import { ListItemModel } from "./ListItemModel";
 
 export type ListDataModel={
-    id: number;
-    name: string;
+    id: number | undefined;
+    name: string | undefined;
     info?: ListItemModel;
 }
