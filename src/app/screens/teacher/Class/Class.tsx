@@ -69,7 +69,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
     const handleAttendenceRoll = (attendence_id: number) => {
         
         const fetchAttendenceRoll = async () => {
-            const response = await axios.get<AttendenceListItemDTO[]>(`http://192.168.0.141:3000/attendanceRoll/atendees`, {
+            const response = await axios.get<AttendenceListItemDTO[]>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendanceRoll/atendees`, {
                 params: {
                     id_class: userClass.id_class,
                     id_attendance_roll: attendence_id,
@@ -112,7 +112,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
 
         const createAttendenceRoll = async () => {
             try {
-                const response = await axios.post<TeacherRollHistoryDTO>(`http://192.168.0.141:3000/attendanceRoll`, 
+                const response = await axios.post<TeacherRollHistoryDTO>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendanceRoll`, 
                     {
                         id_class: userClass.id_class,
                         start_datetime: new Date(),
@@ -154,7 +154,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
 
     useEffect(() => {
         const fetchClassStats = async () => {
-            const response = await axios.get<ClassStatsDTO>(`http://192.168.0.141:3000/class/stats`, {
+            const response = await axios.get<ClassStatsDTO>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/class/stats`, {
                 params: {
                     id_class: userClass.id_class,
                 }
@@ -168,7 +168,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
 
         const fetchTeacherRollHistory = async () => {
             try {
-                const response = await axios.get<TeacherRollHistoryDTO[]>(`http://192.168.0.141:3000/attendanceRoll/history/teacher`, {
+                const response = await axios.get<TeacherRollHistoryDTO[]>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendanceRoll/history/teacher`, {
                     params: {
                         id_class: userClass.id_class,
                     }

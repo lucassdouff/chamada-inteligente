@@ -20,7 +20,7 @@ export default function HomeScreen() {
         });
 
         const fetchClasses = async () => {
-            const response = await axios.get<UserClassesDTO[]>('http://192.168.0.141:3000/class', {
+            const response = await axios.get<UserClassesDTO[]>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/class`, {
                 params: {
                     id: userSession?.id, 
                     role: userSession?.role

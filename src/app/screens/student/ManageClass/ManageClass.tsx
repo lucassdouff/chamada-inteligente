@@ -2,33 +2,31 @@ import { View, Text, Modal, SafeAreaView, Button } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useState } from "react";
 import { TextInput } from "react-native-gesture-handler";
+import { StudentRollHistoryDTO } from "../../../../core/dtos/StudentRollHistoryDTO";
+import moment from "moment";
 
 export type StackParamList = {
-    Class: { classID: string};
+    Class: { attendance_id: number,
+        start_date: Date,
+        presence: boolean};
 }
 
 export default function ManageClassScreen({ route }: NativeStackScreenProps<StackParamList, 'Class'>) {
 
     const [modalVisible, setModalVisible] = useState(false);
 
-
-    const { classID } = route.params
-    console.log(classID);
+    const { attendance_id, start_date, presence } = route.params
 
     return(
         <View className="flex-col py-2 px-4 w-full mt-2 overflow-y-auto h-full">
             <View className="divide-gray-500 divide-y">
-                <Text className="text-xl px-2 py-1 mb-4">Aula do dia 22/09/2023</Text>
+                <Text className="text-xl px-2 py-1 mb-4">Aula do dia {moment(start_date).format('L')}</Text>
 
                 <View className="flex-col py-4">
                     <View className="flex-col gap-4 p-2">
                         <View className="flex-row justify-between">
                             <Text>Presença:</Text>
-                            <Text>Ausente</Text>
-                        </View>
-                        <View className="flex-row justify-between">
-                            <Text>Tempo de presença:</Text>
-                            <Text>N/A</Text>
+                            <Text>{presence?"Presente":"Ausente"}</Text>
                         </View>
                     </View>
                 </View>
@@ -36,7 +34,7 @@ export default function ManageClassScreen({ route }: NativeStackScreenProps<Stac
                 <View className="flex-col items-center justify-start h-full">
                     <Text className="text-xl px-2 py-5 self-start">Processo de abonação de falta</Text>
                     
-                    <Button title="SOLICITAR" onPress={() => {setModalVisible(!modalVisible);}} color="blue" />
+                    <Button title="SOLICITAR" disabled={presence} onPress={() => {setModalVisible(!modalVisible);}} color="blue" />
                 </View>
             </View>
             <Modal

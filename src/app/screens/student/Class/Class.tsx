@@ -30,7 +30,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
 
     useEffect(() => {
         const fetchStudentAttendanceStats = async () => {
-            const response = await axios.get<StudentAttendanceStatsDTO>(`http://192.168.0.141:3000/attendance/stats/${userClass.id_class}/${userSession?.id}`)
+            const response = await axios.get<StudentAttendanceStatsDTO>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendance/stats/${userClass.id_class}/${userSession?.id}`)
                 .catch(error => {console.log(error.response.data)});
             
             const userAttendanceStats : StudentAttendanceStatsDTO | undefined = response?.data;
@@ -40,7 +40,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
 
         const fetchStudentRollHistory = async () => {
             try {
-                const response = await axios.get<StudentRollHistoryDTO[]>(`http://192.168.0.141:3000/attendanceRoll/history/student`, {
+                const response = await axios.get<StudentRollHistoryDTO[]>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendanceRoll/history/student`, {
                     params: {
                         id_class: userClass.id_class,
                         id_student: userSession?.id
@@ -61,7 +61,10 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                             {text: attendance.present ? 'PRESENTE' : 'AUSENTE', action: undefined},
                             {text: 'CONSULTAR', action: () => {
                                 navigation.navigate('Consultar Aula', {
-                                    classID: attendance.id_class
+                                    attendance_id: attendance.id_attendance_roll,
+                                    start_date: attendance.start_datetime,
+                                    presence: attendance.present,
+                                    
                                 });
                             }}
                         ];

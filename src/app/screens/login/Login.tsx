@@ -42,8 +42,8 @@ export default function LoginScreen() {
     const { handleSubmit, control } = useForm();
 
     const onSubmit = async (data: FieldValues) => {
-        
-        const response = await axios.get<UserSessionDTO>('http://192.168.0.141:3000/user/login', {
+
+        const response = await axios.get<UserSessionDTO>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/user/login`, {
             params: {
                 email: data.email,
                 password: data.password
