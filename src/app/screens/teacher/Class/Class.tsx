@@ -212,7 +212,9 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
     return(
         <ScrollView className="flex-col py-2 px-4 w-full mt-2 divide-gray-500 divide-y overflow-auto">
             <View className="mb-6">
-                <ClassCardComponent userClass={userClass} staticMode schedule={userClass.class_schedule} />
+                <ClassCardComponent userClass={userClass} staticMode schedule={userClass.class_schedule} iconActionButton={()=>{
+                    navigation.navigate("Gerenciar Turma", {userClass : userClass})
+                }} />
 
                 <View className="self-center w-3/4 mt-4">
                 <View className="mb-2">

@@ -24,11 +24,7 @@ export function HomeNavigation() {
                     <Icon name="menu" size={20} color={'#000'} onPress={() => drawerNavigation.dispatch(DrawerActions.openDrawer())} />
                 </View>
             )}} />
-            <Stack.Screen name="Turma" component={ClassScreen} options={{headerRight: () => (
-                <View style={{ margin: 10, paddingRight: 15 }}>
-                    <Icon name="groups" size={20} color={'#000'} onPress={() => stackNavigation.navigate('Gerenciar Turma')} />
-                </View>
-            )}} />
+            <Stack.Screen name="Turma" component={ClassScreen} />
             <Stack.Screen name="Gerenciar Turma" component={ManageClassScreen} />
             <Stack.Screen name="Gerenciar Chamadas" component={ManageCallsScreen} />
         </Stack.Navigator>
