@@ -18,7 +18,7 @@ export default function ListComponent({listType, listData} : ListComponentProps)
                 }
             <View className="flex-col items-center">
                 {listData?.map(data =>
-                    <ListItemComponent itemData = {data} />)
+                    <ListItemComponent key={data.id} itemData = {data} />)
                     }
             </View>
         </View>
