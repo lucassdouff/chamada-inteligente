@@ -1,4 +1,4 @@
-import { ScrollView, View } from "react-native";
+import { Alert, BackHandler, ScrollView, View } from "react-native";
 import ClassCardComponent from "../../../../components/Cards/ClassCardComponent";
 import { navigationController } from "../../../../core/controllers/NavigationController";
 import axios from "axios";
@@ -15,10 +15,6 @@ export default function HomeScreen() {
 
     useEffect(() => {
 
-        navigation.addListener('beforeRemove', (e) => {
-            e.preventDefault();
-        });
-
         const fetchClasses = async () => {
             const response = await axios.get<UserClassesDTO[]>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/class`, {
                 params: {
@@ -30,11 +26,30 @@ export default function HomeScreen() {
             
             setUserClasses(classes);
         };
-
+        
+        const backAction = () => {
+            Alert.alert('Espere!', 'Tem certeza que quer sair?', [
+                {
+                    text: 'Cancelar',
+                    onPress: () => null,
+                    style: 'cancel',
+                },
+                {text: 'Sim', onPress: () => BackHandler.exitApp()},
+            ]);
+            return true;
+        };
+        
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction,
+        );
+            
         fetchClasses();
         
-    }, [userSession, navigation]);
-
+        return () => backHandler.remove();
+            
+        }, [userSession, navigation]);
+        
     return(
         <ScrollView className="py-2 px-4 w-full mt-2">
             {

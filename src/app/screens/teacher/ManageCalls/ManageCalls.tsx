@@ -1,9 +1,7 @@
 import { View, Text, Modal, Button, Alert, ScrollView } from "react-native";
 import TableComponent from "../../../../components/Tables/TableComponent";
 import React, { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-import ListComponent from "../../../../components/Lists/ListComponent";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import axios from "axios";
 import moment from "moment";
@@ -241,7 +239,7 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
                 }}>
                 <View className="flex-col justify-between h-full py-2 px-4 w-full mt-2 overflow-y-auto">
 
-                    <SafeAreaView className="divide-gray-500 divide-y mt-4">
+                    <ScrollView className="divide-gray-500 divide-y mt-4">
 
                         <Text className="text-xl p-2">Definir data e horários de agendamento</Text>
 
@@ -307,7 +305,7 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
                                 )}
                             </View>
                         </View>
-                    </SafeAreaView>
+                    </ScrollView>
 
                     <View className="flex-col mb-8">
                         <View className="mb-2">

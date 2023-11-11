@@ -59,6 +59,6 @@ export default function ManageClassScreen({ route }: NativeStackScreenProps<Stac
                 ]} />
             </View>
             <ListComponent listType={"student"} listData={classStudentList} />
-        </View>
+        </ScrollView>
     )
 }

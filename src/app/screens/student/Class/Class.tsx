@@ -127,7 +127,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                 </View>
             </View>
 
-            <View className="flex-col">
+            <View className="flex-col mb-4">
                 <Text className="my-4 text-xl">Histórico de aulas</Text>
                 <View className="self-center">
                     <TableComponent tableData={studentRollHistory} />

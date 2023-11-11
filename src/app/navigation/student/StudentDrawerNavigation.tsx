@@ -1,7 +1,6 @@
 import { DrawerContentScrollView, DrawerItem, DrawerItemList, createDrawerNavigator } from "@react-navigation/drawer";
 import { HomeNavigation } from "./Home/HomeNavigation";
 import { NotificationsNavigation } from "./Notifications/NotificationsNavigation";
-import LoginScreen from "../../screens/login/Login";
 import { useNavigation } from "@react-navigation/core";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { View } from "react-native";
@@ -22,7 +21,7 @@ function AppDrawerContent (props:any) {
              label="Log out"
              onPress={()=>{
                 setSession(undefined);
-                navigation.navigate('Logout');
+                navigation.navigate('Login');
              }}
              style={{flex:1,justifyContent:'flex-end'}}
            />
@@ -35,8 +34,5 @@ export default (props: any) => (
     <Drawer.Navigator drawerContent={props=><AppDrawerContent {...props}/>} screenOptions={{ headerShown: false }}>
         <Drawer.Screen name="Turmas" component={HomeNavigation} />
         <Drawer.Screen name="Notificações" component={NotificationsNavigation} />
-        <Drawer.Screen options={{
-          drawerItemStyle: { display: 'none' }
-        }} name="Logout" component={LoginScreen} />
     </Drawer.Navigator>
 );
