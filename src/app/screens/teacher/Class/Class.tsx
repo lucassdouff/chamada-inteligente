@@ -157,7 +157,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
 	            end_datetime: new Date()
             })
             .catch(error => {console.log(error.response.data)});
-            console.log(response)
+
             if(response?.status === 200) {
                 setModalVisible(!modalVisible);
                 Alert.alert('CHAMADA ENCERRADA', 'A chamada foi encerrada com sucesso!');
@@ -273,7 +273,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                             {text: new Date(attendance.start_datetime).toLocaleDateString(), action: undefined},
                             {text: moment(attendance.start_datetime).format("LT") + (attendance.end_datetime ? " - " + moment(attendance.end_datetime).format("LT") : ''), action: undefined},
                             {text: attendance.present_students.toString(), action: undefined},
-                            {text: attendance.percentage + '%', action: undefined},
+                            {text: attendance.percentage.toFixed(0) + '%', action: undefined},
                             {text: 'CONSULTAR', action: () => {
                                 handleAttendenceRoll(attendance.id_attendance_roll, attendance.end_datetime);
                             }}
@@ -320,7 +320,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                     </View>
                     <View className="flex-row justify-between">
                         <Text>Média de frequência dos alunos:</Text>
-                        <Text>{classStats?.attendancePercentage} aluno(s)</Text>
+                        <Text>{classStats?.attendancePercentage.toFixed(2)} aluno(s)</Text>
                     </View>
                 </View>
             </View>

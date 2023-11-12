@@ -40,7 +40,7 @@ export default function ListItemComponent({itemData} : ListItemComponentProps){
                         </TouchableWithoutFeedback>
                     ) : (
                         <Text className={'px-2 mr-1'+ color}>
-                            {itemData.info.description}%
+                            {Number(itemData.info.description).toFixed(0)}%
                         </Text>
                     )
                 ) : null

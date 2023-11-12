@@ -176,7 +176,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                     </View>
                     <View className="flex-row justify-between">
                         <Text>Percentual de faltas:</Text>
-                        <Text>{studentAttendanceStats?.absencePercentage}%</Text>
+                        <Text>{studentAttendanceStats?.absencePercentage.toFixed(0)}%</Text>
                     </View>
                     <View className="flex-row justify-between">
                         <Text>Tempo médio de presença:</Text>
