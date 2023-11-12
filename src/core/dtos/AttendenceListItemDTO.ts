@@ -1,6 +1,8 @@
 export interface AttendenceListItemDTO {
-    enrollment: number, 
-    id_course: number, 
-    id_student: number, 
-    present: boolean
+    name: string | undefined,
+    enrollment: number | undefined,
+    id_course: number | undefined, 
+    id_attendance: number | undefined,
+    id_student: number| undefined,
+    present: boolean | undefined,
 }
