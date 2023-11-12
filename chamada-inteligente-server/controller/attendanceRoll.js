@@ -102,6 +102,33 @@ exports.getAllScheduledAttendance = (req, res, next) => {
     });
 }
 
+exports.getOngoingAttendanceRoll = (req, res, next) => {
+    const { id_class } = req.params;
+
+    Attendance_roll.findAll({
+        where: {
+            id_class: id_class,
+            start_datetime: {
+                [Op.gt]: new Date() // seleciona chamadas com data/hora superior ao atual
+
+            },
+            end_datetime: {
+                [Op.or]: {
+                    [Op.lt]: new Date(),
+                    [Op.eq]: null
+                  }
+            }
+        }
+    })
+    .then(attendanceRolls => {
+        res.status(200).json(attendanceRolls);
+    })
+    .catch(error => {
+        console.error(error);
+        res.status(500).json({ error: 'Erro ao buscar as chamadas agendadas' });
+    });
+}
+
 exports.getTeacherAttendanceRollHistory = async (req, res, next) => {
     const { id_class } = req.query;
     try{

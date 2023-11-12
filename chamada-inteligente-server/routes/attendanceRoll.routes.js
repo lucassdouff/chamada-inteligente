@@ -10,6 +10,7 @@ router.get('/atendees',attendanceRollController.getAttendeesByAttendanceRoll);
 router.get('/history/student',attendanceRollController.getStudentAttendanceRollHistory);
 router.get('/history/teacher',attendanceRollController.getTeacherAttendanceRollHistory);
 router.get('/upcoming/:id_class', attendanceRollController.getAllScheduledAttendance);
+router.get('/ongoing/:id_class', attendanceRollController.getOngoingAttendanceRoll);
 
 
 module.exports = router;
