@@ -14,9 +14,9 @@ export type StackParamList = {
 
 export default function ManageClassScreen({ route }: NativeStackScreenProps<StackParamList, 'Class'>) {
 
-    const {userSession} = navigationController();
+    const { userSession } = navigationController();
 
-    const {userClass} = route.params;
+    const { userClass } = route.params;
 
     const [classStudentList, setClassStudentList] = useState<ListDataModel[]>();
 
@@ -54,7 +54,7 @@ export default function ManageClassScreen({ route }: NativeStackScreenProps<Stac
                 <ListComponent listType={"teacher"} listData={[
                     {
                         id: userSession?.id,
-                        name: userSession?.id?.toString(),
+                        name: userSession?.name,
                     }
                 ]} />
             </View>

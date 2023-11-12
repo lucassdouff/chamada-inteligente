@@ -13,6 +13,7 @@ import { TableDataModel } from "../../../../core/models/TableDataModel";
 import { ClassStatsDTO } from "../../../../core/dtos/ClassStatsDTO";
 import { TeacherRollHistoryDTO } from "../../../../core/dtos/TeacherRollHistoryDTO";
 import moment from "moment";
+import 'moment/locale/pt-br';
 import { AttendenceListItemDTO } from "../../../../core/dtos/AttendenceListItemDTO";
 import { ListDataModel } from "../../../../core/models/ListDataModel";
 import { ScrollView } from "react-native-gesture-handler";
@@ -30,11 +31,15 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
     
     const [classStats, setClassStats] = useState<ClassStatsDTO>();
     const [teacherRollHistory, setTeacherRollHistory] = useState<TableDataModel[][]>();
-    const [attendenceList, setAttendenceList] = useState<ListDataModel[]>();
+    const [attendenceList, setAttendenceList] = useState<{
+        attendance_roll: ListDataModel[];
+        id_attendance_roll: number;
+        end_datetime?: Date;
+    }>();
 
     const [modalVisible, setModalVisible] = useState(false);
 
-    const changeAttendenceAlert = (id_student: number) =>
+    const changeAttendenceAlert = (id_student: number | undefined) =>
     Alert.alert('MODIFICAR PRESENÇA', 'Selecione a opção de presença desejada:', [
         {
             text: 'CANCELAR',
@@ -45,10 +50,11 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
         text: 'AUSENTE',
         onPress: () => {
             setAttendenceList((prevState) => {
-                const newState = prevState ? [...prevState] : [];
+                const newState = prevState?.attendance_roll ? [...prevState.attendance_roll] : [];
                 const index = newState.findIndex((item) => item.id === id_student);
                 newState[index] = { ...newState[index], info: { description: 'AUSENTE', action: () => {changeAttendenceAlert(id_student)} } };
-                return newState;
+                return {attendance_roll: newState, id_attendance_roll: prevState?.id_attendance_roll || 0};
+            
             });
         },
         
@@ -57,22 +63,22 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
         text: 'PRESENTE', 
         onPress: () => {
             setAttendenceList((prevState) => {
-                const newState = prevState ? [...prevState] : [];
+                const newState = prevState?.attendance_roll ? [...prevState.attendance_roll] : [];
                 const index = newState.findIndex((item) => item.id === id_student);
                 newState[index] = { ...newState[index], info: { description: 'PRESENTE', action: () => {changeAttendenceAlert(id_student)} } };
-                return newState;
+                return {attendance_roll: newState, id_attendance_roll: prevState?.id_attendance_roll || 0};
             });
         }
         },
     ]);
 
-    const handleAttendenceRoll = (attendence_id: number) => {
+    const handleAttendenceRoll = (id_attendance_roll: number, end_datetime: Date | undefined) => {
         
         const fetchAttendenceRoll = async () => {
             const response = await axios.get<AttendenceListItemDTO[]>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendanceRoll/atendees`, {
                 params: {
                     id_class: userClass.id_class,
-                    id_attendance_roll: attendence_id,
+                    id_attendance_roll: id_attendance_roll,
                 }
             })
             .catch(error => {console.log(error.response.data)});
@@ -82,7 +88,9 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
             const attendenceListMapped : ListDataModel[] | undefined = userAttendenceList?.map(attendence => {
                 return {
                     id: attendence.id_student,
-                    name: attendence.id_student.toString(),
+                    id_course: attendence.id_course,
+                    enrollment: attendence.enrollment,
+                    name: attendence.name,
                     info: {
                         description: attendence.present ? 'PRESENTE' : 'AUSENTE',
                         action: () => {
@@ -92,13 +100,70 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                 }
             });
 
-            setAttendenceList(attendenceListMapped);
+            setAttendenceList({
+                attendance_roll: attendenceListMapped || [],
+                id_attendance_roll: id_attendance_roll,
+                end_datetime: end_datetime,
+            }
+            );
         };
 
         fetchAttendenceRoll();
 
         setModalVisible(!modalVisible);
     };
+
+    const handleUpdateAttendenceRoll = () => {
+
+        const updateAttendenceRoll = async () => {
+
+            const attendenceListMapped : AttendenceListItemDTO[] | undefined = attendenceList?.attendance_roll?.map(attendence => {
+                return {
+                    name: attendence.name,
+                    id_course: attendence.id_course,
+                    enrollment: attendence.enrollment,
+                    id_student: attendence.id,
+                    present: attendence.info?.description === 'PRESENTE' ? true : false,
+                }
+            });
+
+            const response = await axios.put(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendance`, {
+                attendance_roll: attendenceListMapped,
+                id_attendance_roll: attendenceList?.id_attendance_roll,
+            })
+            .catch(error => {console.log(error.response.data)});
+
+            if(response?.status === 200) {
+                setModalVisible(!modalVisible);
+                Alert.alert('CHAMADA SALVA', 'A chamada foi salva com sucesso!');
+            } else {
+                Alert.alert('ERRO', 'Ocorreu um erro ao salvar a chamada!');
+            }
+        };
+
+        updateAttendenceRoll();
+    }
+
+    const handleEndAttendanceRoll = () => {
+        
+        const endAttendanceRoll = async () => {
+
+            const response = await axios.put(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendanceRoll/end`, {
+                id_attendance_roll: attendenceList?.id_attendance_roll,
+	            end_datetime: new Date()
+            })
+            .catch(error => {console.log(error.response.data)});
+
+            if(response?.status === 200) {
+                setModalVisible(!modalVisible);
+                Alert.alert('CHAMADA ENCERRADA', 'A chamada foi encerrada com sucesso!');
+            } else {
+                Alert.alert('ERRO', 'Ocorreu um erro ao encerrar a chamada!');
+            }
+        }
+
+        endAttendanceRoll();
+    }
 
     const startCallAlert = () =>
     Alert.alert('INICIAR CHAMADA', 'Tem certeza que quer iniciar uma chamada?', [
@@ -129,7 +194,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                         {text: "0", action: undefined},
                         {text: "0%", action: undefined},
                         {text: 'CONSULTAR', action: () => {
-                            handleAttendenceRoll(userAttendanceRoll?.id_attendance_roll);
+                            handleAttendenceRoll(userAttendanceRoll?.id_attendance_roll, userAttendanceRoll?.end_datetime);
                         }}
                     ];
 
@@ -188,7 +253,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                             {text: attendance.present_students.toString(), action: undefined},
                             {text: attendance.percentage + '%', action: undefined},
                             {text: 'CONSULTAR', action: () => {
-                                handleAttendenceRoll(attendance.id_attendance_roll);
+                                handleAttendenceRoll(attendance.id_attendance_roll, attendance.end_datetime);
                             }}
                         ];
     
@@ -252,11 +317,26 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                 setModalVisible(!modalVisible);
                 }}>
                 <View className="flex-col justify-between h-full py-2 px-4 w-full mt-2 overflow-auto">
-                    <ListComponent listType={"student"} listData={attendenceList} />
+                    <View className="flex-col">
+                        <ListComponent listType={"student"} listData={attendenceList?.attendance_roll} />
+
+                        {attendenceList?.end_datetime ? 
+                            new Date(attendenceList.end_datetime) < new Date() ? 
+                                <View className="flex-col mt-4">
+                                    <Text className="text-center">A chamada foi encerrada!</Text>
+                                </View>
+                            :   <View className="flex-col mt-4">
+                                    <Text className="text-center">A chamada está em andamento! Fim {
+                                        moment(new Date(attendenceList.end_datetime)).locale("pt-br").endOf('minute').fromNow()
+                                    }</Text>
+                                </View>
+                        : <Button title="ENCERRAR CHAMADA" color='red' onPress={handleEndAttendanceRoll} />
+                        }
+                    </View>
 
                     <View className="flex-col mb-8">
                         <View className="mb-2">
-                            <Button title="SALVAR ALTERAÇÕES" color='green' onPress={() => {}} />
+                            <Button title="SALVAR ALTERAÇÕES" color='green' onPress={handleUpdateAttendenceRoll} />
                         </View>
                         <Button title="CANCELAR" color='red' onPress={() => {setModalVisible(!modalVisible);}} />
                     </View>
