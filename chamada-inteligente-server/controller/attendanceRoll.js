@@ -72,7 +72,7 @@ const getAllPresentStudentsFromAttendenceRoll = async (id_attendance_roll) => {
 const getAllVacantStudentsFromAttendenceRoll = async (id_attendance_roll,id_class) => {
     const [results, metadata] = await sequelize.query(`SELECT s.*, u.name FROM student s LEFT JOIN class_student cs ON s.id_student = cs.id_student JOIN class c ON cs.id_class = c.id_class
     LEFT JOIN attendance a ON s.id_student = a.id_student AND a.id_attendance_roll = ${id_attendance_roll}
-    JOIN user u ON u.id_user = s.id_student WHERE c.id_class = ${id_class} AND a.id_attendance_roll IS NULL;`);
+    JOIN user u ON u.id_user = s.id_student WHERE c.id_class = ${id_class} AND a.id_attendance IS NULL;`);
 
     const [vacant] = await sequelize.query(`SELECT s.*, u.name, a.id_attendance FROM student s 
     JOIN attendance a ON s.id_student = a.id_student JOIN user u ON u.id_user = s.id_student WHERE a.id_attendance_roll = ${id_attendance_roll} and a.validation = false`);
