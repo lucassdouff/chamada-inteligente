@@ -154,11 +154,12 @@ exports.getStudentAttendanceRollHistory = async (req, res, next) => {
 
 
 exports.endAttendanceRoll = async (req, res, next) => {
-    const {id_attendance_roll} = req.body;
+    const {id_attendance_roll, end_datetime} = req.body;
 
+    const endDatetime = end_datetime ? new Date(end_datetime) : new Date();
     try{
-        const [results, metadata] = await sequelize.query(`UPDATE attendance_roll SET end_datetime = NOW() WHERE id_attendance_roll = ${id_attendance_roll}`);
-        res.status(200).json(results);
+        await sequelize.query(`UPDATE attendance_roll SET end_datetime = ${endDatetime} WHERE id_attendance_roll = ${id_attendance_roll}`);
+        res.status(200).json({message: "Chamada finalizada com sucesso"});
     } catch {error => {
             res.status(500).json({ error: 'Erro ao finalizar a chamada' });
         };
