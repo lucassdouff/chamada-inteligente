@@ -51,7 +51,7 @@ exports.login = async (req, res, next) => {
 
       const role = teacher ? "teacher" : "student";
 
-      res.status(200).json({ role, id: userId });
+      res.status(200).json({ role, id: userId, name: user.name });
 
   } catch (error) {
       res.status(500).json({ error: 'An error occurred while logging in' });
