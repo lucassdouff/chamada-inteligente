@@ -31,8 +31,12 @@ export default function ManageClassScreen({ route }: NativeStackScreenProps<Stac
                     return{
                         id : student.id_student,
                         name: student.name,
+                        id_attendance: undefined,
+                        id_course: undefined,
+                        enrollment: undefined,
+
                         info: {
-                            description: '75'
+                            description: student.attendancePercentage.toString(),
                         }
                     }
                 });
@@ -55,6 +59,9 @@ export default function ManageClassScreen({ route }: NativeStackScreenProps<Stac
                     {
                         id: userSession?.id,
                         name: userSession?.name,
+                        id_attendance: undefined,
+                        id_course: undefined,
+                        enrollment: undefined,
                     }
                 ]} />
             </View>

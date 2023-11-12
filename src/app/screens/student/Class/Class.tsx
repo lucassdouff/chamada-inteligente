@@ -1,4 +1,4 @@
-import { View, Text, Switch, Button, ScrollView } from "react-native";
+import { View, Text, Switch, Button, ScrollView, Alert } from "react-native";
 import ClassCardComponent from "../../../../components/Cards/ClassCardComponent";
 import TableComponent from "../../../../components/Tables/TableComponent";
 import { useEffect, useState } from "react";
@@ -12,6 +12,7 @@ import { StudentAttendanceStatsDTO } from "../../../../core/dtos/StudentAttendan
 import { StudentRollHistoryDTO } from "../../../../core/dtos/StudentRollHistoryDTO";
 import { TableDataModel } from "../../../../core/models/TableDataModel";
 import moment from "moment";
+import { ScheduledRollHistoryDTO } from "../../../../core/dtos/ScheduledRollHistoryDTO";
 
 export type StackParamList = {
     Class: { userClass: UserClassesDTO};
@@ -27,6 +28,65 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
     
     const { userSession } = navigationController();
     const { userClass } = route.params
+
+    const handleCreateAttendance = () => {
+
+        const fetchCurrentAttendanceRoll = async () => {
+            const response = await axios.get<ScheduledRollHistoryDTO[]>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendanceRoll/ongoing/${userClass.id_class}`);
+
+            const currentAttendanceRoll : ScheduledRollHistoryDTO[] | undefined = response?.data;
+
+            const lastHistoryAttendance = studentRollHistory?.find(attendance => attendance[1].text === moment(currentAttendanceRoll[0]?.start_datetime).format("LT") + (currentAttendanceRoll[0]?.end_datetime ? " - " + moment(currentAttendanceRoll[0]?.end_datetime).format("LT") : ''));
+            
+            if(lastHistoryAttendance && lastHistoryAttendance[2].text === 'PRESENTE') {
+                Alert.alert('PRESENÇA JÁ INDICADA', 'Presença já indicada para essa aula.');
+            } else {
+                if(currentAttendanceRoll[0]) {
+                    createAttendanceAlert(currentAttendanceRoll[0].id_attendance_roll, userSession?.id);
+                }else {
+                    Alert.alert('CHAMADA NÃO INICIADA', 'A chamada ainda não foi iniciada pelo professor.');
+                }
+            }
+        }
+
+        fetchCurrentAttendanceRoll();
+    }
+
+    const createAttendanceAlert = (id_attendance_roll: number, id_student: number | undefined) =>
+    Alert.alert('CHAMADA EM ANDAMENTO', 'Indicar presença?', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'Sim', onPress: () => {
+
+        const createAttendence = async () => {
+            try {
+                const response = await axios.post(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendance`, 
+                    {
+                        medical_certificate: "N/A",
+                        id_attendance_roll: id_attendance_roll,
+                        id_student: id_student,
+                    },
+                );
+
+                if(response.status === 200) {
+                    Alert.alert('PRESENÇA INDICADA', 'Presença indicada com sucesso!');
+                } else {
+                    Alert.alert('ERRO', 'Erro ao indicar presença!');
+                }
+
+            } catch (error) {
+                console.log(error);
+            };
+        };
+
+        createAttendence();
+        }
+      },
+    ]);
 
     useEffect(() => {
         const fetchStudentAttendanceStats = async () => {
@@ -54,23 +114,21 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                 ];
 
                 userAttendanceRollHistory?.forEach(attendance => {
-                    if(attendance.end_datetime) {
-                        const historyItem = [
-                            {text: new Date(attendance.start_datetime).toLocaleDateString(), action: undefined},
-                            {text: moment(attendance.start_datetime).format("LT") + " - " + moment(attendance.end_datetime).format("LT"), action: undefined},
-                            {text: attendance.present ? 'PRESENTE' : 'AUSENTE', action: undefined},
-                            {text: 'CONSULTAR', action: () => {
-                                navigation.navigate('Consultar Aula', {
-                                    attendance_id: attendance.id_attendance_roll,
-                                    start_date: attendance.start_datetime,
-                                    presence: attendance.present,
-                                    
-                                });
-                            }}
-                        ];
-    
-                        history.push(historyItem || []);
-                    }
+                    const historyItem = [
+                        {text: new Date(attendance.start_datetime).toLocaleDateString(), action: undefined},
+                        {text: moment(attendance.start_datetime).format("LT") + (attendance.end_datetime ? " - " + moment(attendance.end_datetime).format("LT") : ''), action: undefined},
+                        {text: attendance.present ? 'PRESENTE' : 'AUSENTE', action: undefined},
+                        {text: 'CONSULTAR', action: () => {
+                            navigation.navigate('Consultar Aula', {
+                                attendance_id: attendance.id_attendance_roll,
+                                start_date: attendance.start_datetime,
+                                presence: attendance.present,
+                                
+                            });
+                        }}
+                    ];
+
+                    history.push(historyItem || []);
                 });
 
                 setStudentRollHistory(history);
@@ -105,7 +163,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                     />
                 </View>
                 <View className="self-center w-3/4 mt-2">
-                    <Button title="INDICAR PRESENÇA" disabled={isEnabled} onPress={() => {}} color="blue" />
+                    <Button title="INDICAR PRESENÇA" disabled={isEnabled} onPress={handleCreateAttendance} color="blue" />
                 </View>
             </View>
 

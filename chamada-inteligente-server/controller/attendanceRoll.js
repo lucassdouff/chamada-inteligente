@@ -109,12 +109,12 @@ exports.getOngoingAttendanceRoll = (req, res, next) => {
         where: {
             id_class: id_class,
             start_datetime: {
-                [Op.gt]: new Date() // seleciona chamadas com data/hora superior ao atual
+                [Op.lt]: new Date() // seleciona chamadas com data/hora superior ao atual
 
             },
             end_datetime: {
                 [Op.or]: {
-                    [Op.lt]: new Date(),
+                    [Op.gt]: new Date(),
                     [Op.eq]: null
                   }
             }
@@ -134,7 +134,7 @@ exports.getTeacherAttendanceRollHistory = async (req, res, next) => {
     try{
         
         const [results, metadata] = await sequelize.query(`SELECT ar.*, COUNT(a.id_student) as present_students FROM attendance_roll ar 
-        LEFT JOIN attendance a ON ar.id_attendance_roll = a.id_attendance_roll 
+        LEFT JOIN attendance a ON ar.id_attendance_roll = a.id_attendance_roll AND a.validation = true 
         WHERE ar.id_class = ${id_class} AND ar.start_datetime < NOW() GROUP BY ar.id_attendance_roll`);
 
         const count = await countStudentsInClass(id_class);
@@ -185,7 +185,7 @@ exports.endAttendanceRoll = async (req, res, next) => {
 
     const endDatetime = end_datetime ? new Date(end_datetime) : new Date();
     try{
-        await sequelize.query(`UPDATE attendance_roll SET end_datetime = ${endDatetime} WHERE id_attendance_roll = ${id_attendance_roll}`);
+        await Attendance_roll.update({end_datetime: endDatetime}, {where: {id_attendance_roll: id_attendance_roll}});
         res.status(200).json({message: "Chamada finalizada com sucesso"});
     } catch {error => {
             res.status(500).json({ error: 'Erro ao finalizar a chamada' });

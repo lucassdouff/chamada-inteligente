@@ -4,10 +4,13 @@ const sequelize = require('../util/database');
 
 exports.createAttendance = async(req, res, next) => {
     const {medical_certificate, id_attendance_roll, id_student} = req.body
+    console.log(id_attendance_roll)
+    console.log(id_student)
     try {
-        const datetime = new Date();
+        const datetime = new Date().getHours();
+        const minutes = new Date().getMinutes();
         const attendance = await Attendance.create({
-            hour : datetime,
+            hour : `${datetime}:${minutes}`,
             validation: true,
             medical_certificate,
             id_attendance_roll,
@@ -75,23 +78,17 @@ exports.getStudentAttendanceStats = async (req, res, next) => {
 
         // Buscar todas as Attendance do aluno para essa class com detalhes do Attendance_roll
         const response = await sequelize.query(`Select a.*, ar.start_datetime from attendance a 
-        join attendance_roll ar on a.id_attendance_roll = ar.id_attendance_roll where a.id_student = ${id_student} and ar.id_class = ${id_class}`);
+        join attendance_roll ar on a.id_attendance_roll = ar.id_attendance_roll where a.id_student = ${id_student} and ar.id_class = ${id_class} and a.validation = true`);
 
         const studentAttendancesDetails = response[0];
-
-
 
         // Calcular o tempo total de ausencia do aluno
         let totalAbsenceTime = 0;
         studentAttendancesDetails.forEach(attendance => {
             const classStartTime = new Date(attendance.start_datetime);
-
-            // Convertendo Sequelize.TIME para uma data js
-            const [hours, minutes] = attendance.hour.split(':').map(Number);
-            const studentArrivalDate = new Date(classStartTime);
-            studentArrivalDate.setHours(hours, minutes);
-
-            const delay = (studentArrivalDate - classStartTime) / 60000; // Convertendo para min
+            console.log(classStartTime)
+            console.log(attendance.class_schedule)
+            const delay = (attendance.hour - classStartTime) / 60000; // Convertendo para min
             totalAbsenceTime += delay;
         });
 

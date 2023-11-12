@@ -119,9 +119,20 @@ exports.removeClass = async (req, res, next) => {
 exports.getStudentsByClassID = async (req, res, next) => {
     const { id_class } = req.query;
     try{
-        const [results, metadata] = await sequelize.query(`select s.*,u.name from student s 
-        join class_student cs on cs.id_student = s.id_student JOIN user u on u.id_user = s.id_student where cs.id_class = ${id_class};`);
-        return res.status(200).json(results);
+        const [results, metadata] = await sequelize.query(`select s.*,u.name, count(a.id_attendance) as count from student s 
+        join class_student cs on cs.id_student = s.id_student JOIN user u on u.id_user = s.id_student JOIN attendance a on a.id_student = s.id_student where cs.id_class = ${id_class} and a.validation = true
+        group by s.id_student;`);
+
+        const [count] = await sequelize.query(`select count(1) as count from attendance_roll where id_class = ${id_class} and start_datetime < now();`)
+        
+        const students = results.map((student) => {
+            return {
+                ...student,
+                attendancePercentage: count[0].count ? (student.count/count[0].count) * 100 : 100
+            }
+        });
+
+        res.status(200).json(students);
     } catch {
         res.status(500).json({error: "An error occurred while getting students"});
     }
@@ -133,8 +144,8 @@ exports.getClassStats = async (req, res, next) => {
     try{
         const count = await countStudentsInClass(id_class);
 
-        const [attendanceCount] = await sequelize.query(`select count(1) as count from attendance a join attendance_roll ar on ar.id_attendance_roll = a.id_attendance_roll where ar.id_class = ${id_class};`);
-        const [attendanceRollCount] = await sequelize.query(`select count(1) as count from attendance_roll where id_class = ${id_class} and end_datetime < now()`);
+        const [attendanceCount] = await sequelize.query(`select count(1) as count from attendance a join attendance_roll ar on ar.id_attendance_roll = a.id_attendance_roll where ar.id_class = ${id_class} and a.validation = true;`);
+        const [attendanceRollCount] = await sequelize.query(`select count(1) as count from attendance_roll where id_class = ${id_class} and (end_datetime < now() or end_datetime is null) and start_datetime < now()`);
 
 
         console.log()

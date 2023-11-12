@@ -17,6 +17,7 @@ import 'moment/locale/pt-br';
 import { AttendenceListItemDTO } from "../../../../core/dtos/AttendenceListItemDTO";
 import { ListDataModel } from "../../../../core/models/ListDataModel";
 import { ScrollView } from "react-native-gesture-handler";
+import { ScheduledRollHistoryDTO } from "../../../../core/dtos/ScheduledRollHistoryDTO";
 
 export type StackParamList = {
     Class: { userClass: UserClassesDTO};
@@ -53,7 +54,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                 const newState = prevState?.attendance_roll ? [...prevState.attendance_roll] : [];
                 const index = newState.findIndex((item) => item.id === id_student);
                 newState[index] = { ...newState[index], info: { description: 'AUSENTE', action: () => {changeAttendenceAlert(id_student)} } };
-                return {attendance_roll: newState, id_attendance_roll: prevState?.id_attendance_roll || 0};
+                return {attendance_roll: newState, id_attendance_roll: prevState?.id_attendance_roll || 0, end_datetime: prevState?.end_datetime};
             
             });
         },
@@ -66,7 +67,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                 const newState = prevState?.attendance_roll ? [...prevState.attendance_roll] : [];
                 const index = newState.findIndex((item) => item.id === id_student);
                 newState[index] = { ...newState[index], info: { description: 'PRESENTE', action: () => {changeAttendenceAlert(id_student)} } };
-                return {attendance_roll: newState, id_attendance_roll: prevState?.id_attendance_roll || 0};
+                return {attendance_roll: newState, id_attendance_roll: prevState?.id_attendance_roll || 0, end_datetime: prevState?.end_datetime};
             });
         }
         },
@@ -90,7 +91,9 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                     id: attendence.id_student,
                     id_course: attendence.id_course,
                     enrollment: attendence.enrollment,
+                    id_attendance: attendence.id_attendance,
                     name: attendence.name,
+
                     info: {
                         description: attendence.present ? 'PRESENTE' : 'AUSENTE',
                         action: () => {
@@ -122,6 +125,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                     name: attendence.name,
                     id_course: attendence.id_course,
                     enrollment: attendence.enrollment,
+                    id_attendance: attendence.id_attendance,
                     id_student: attendence.id,
                     present: attendence.info?.description === 'PRESENTE' ? true : false,
                 }
@@ -142,7 +146,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
         };
 
         updateAttendenceRoll();
-    }
+    };
 
     const handleEndAttendanceRoll = () => {
         
@@ -153,7 +157,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
 	            end_datetime: new Date()
             })
             .catch(error => {console.log(error.response.data)});
-
+            console.log(response)
             if(response?.status === 200) {
                 setModalVisible(!modalVisible);
                 Alert.alert('CHAMADA ENCERRADA', 'A chamada foi encerrada com sucesso!');
@@ -163,6 +167,23 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
         }
 
         endAttendanceRoll();
+    };
+
+    const handleStartCall = () => {
+
+        const startCall = async () => {
+            const response = await axios.get<ScheduledRollHistoryDTO[]>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendanceRoll/ongoing/${userClass.id_class}`);
+
+            const currentAttendanceRoll : ScheduledRollHistoryDTO[] | undefined = response?.data;
+
+            if(currentAttendanceRoll[0]) {
+                Alert.alert('CHAMADA NÃO INICIADA', 'Uma chamada ja foi iniciada pelo professor.');
+            }else {
+                startCallAlert();
+            }
+        }
+
+        startCall();
     }
 
     const startCallAlert = () =>
@@ -177,6 +198,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
 
         const createAttendenceRoll = async () => {
             try {
+
                 const response = await axios.post<TeacherRollHistoryDTO>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendanceRoll`, 
                     {
                         id_class: userClass.id_class,
@@ -227,7 +249,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                 .catch(error => {console.log(error.response.data)});
             
             const userClassStats : ClassStatsDTO | undefined = response?.data;
-
+            
             setClassStats(userClassStats);
         };
 
@@ -283,7 +305,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
 
                 <View className="self-center w-3/4 mt-4">
                 <View className="mb-2">
-                    <Button title="INICIAR CHAMADA" color='blue' onPress={startCallAlert} />
+                    <Button title="INICIAR CHAMADA" color='blue' onPress={handleStartCall} />
                 </View>
                     <Button title="AGENDAR CHAMADA" color='orange' onPress={() => {navigation.navigate('Gerenciar Chamadas', {userClass: userClass});}} />
                 </View>
@@ -298,7 +320,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                     </View>
                     <View className="flex-row justify-between">
                         <Text>Média de frequência dos alunos:</Text>
-                        <Text>{classStats?.attendancePercentage}%</Text>
+                        <Text>{classStats?.attendancePercentage} aluno(s)</Text>
                     </View>
                 </View>
             </View>
