@@ -1,17 +1,39 @@
-import { Alert, BackHandler, ScrollView, View } from "react-native";
+import { Alert, BackHandler, ScrollView } from "react-native";
 import ClassCardComponent from "../../../../components/Cards/ClassCardComponent";
 import { navigationController } from "../../../../core/controllers/NavigationController";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { UserClassesDTO } from "../../../../core/dtos/UserClassesDTO";
-import { useNavigation } from "@react-navigation/core";
+import { useFocusEffect } from "@react-navigation/core";
+import React from "react";
 
 export default function HomeScreen() {
 
-    const navigation = useNavigation();
     const { userSession } = navigationController();
 
     const [userClasses, setUserClasses] = useState<UserClassesDTO[] | undefined>();
+
+    useFocusEffect(
+        React.useCallback(() => {
+          const onBackPress = () => {
+           
+           Alert.alert('Espere!', 'Tem certeza que quer sair?', [
+              {
+                text: 'Cancel',
+                onPress: () => null,
+                style: 'cancel',
+              },
+              {text: 'YES', onPress: () => BackHandler.exitApp()},
+            ]);
+            return true;
+          };
+    
+          BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    
+          return () =>
+            BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+        }, []),
+    );
 
     useEffect(() => {
 
@@ -26,29 +48,10 @@ export default function HomeScreen() {
             
             setUserClasses(classes);
         };
-
-        const backAction = () => {
-            Alert.alert('Espere!', 'Tem certeza que quer sair?', [
-                {
-                    text: 'Cancelar',
-                    onPress: () => null,
-                    style: 'cancel',
-                },
-                {text: 'Sim', onPress: () => BackHandler.exitApp()},
-            ]);
-            return true;
-        };
-        
-        const backHandler = BackHandler.addEventListener(
-            'hardwareBackPress',
-            backAction,
-        );
             
         fetchClasses();
-        
-        return () => backHandler.remove();
-        
-    }, [userSession, navigation]);
+                
+    }, [userSession]);
 
     return(
         <ScrollView className="py-2 px-4 w-full mt-2">

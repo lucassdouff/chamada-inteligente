@@ -21,7 +21,10 @@ function AppDrawerContent (props:any) {
              label="Log out"
              onPress={()=>{
                 setSession(undefined);
-                navigation.navigate('Login');
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: 'Login' }],
+                });
              }}
              style={{flex:1,justifyContent:'flex-end'}}
            />
