@@ -124,3 +124,34 @@ exports.getStudentAttendanceStats = async (req, res, next) => {
         res.status(500).json({ error: 'Erro ao buscar estatísticas de presença do aluno' });
     }
 }
+
+exports.updateAttendances = async (req, res, next) => {
+  const { attendance_roll, id_attendance_roll } = req.body;
+
+  try {
+    const promises = attendance_roll.map((attendance) => {
+      const { id_student, id_attendance, present} = attendance;
+
+      if (id_attendance) {
+        return Attendance.update(
+          { validation: present },
+          { where: { id_attendance, id_student } }
+        );
+      } else {
+        return Attendance.create({
+          id_student,
+          id_attendance_roll,
+          validation: present,
+        });
+      }
+    });
+
+    await Promise.all(promises);
+
+    res.status(200).json({ message: 'Presença atualizada com sucesso' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao atualizar presença' });
+  }
+
+}
