@@ -18,6 +18,8 @@ import { AttendenceListItemDTO } from "../../../../core/dtos/AttendenceListItemD
 import { ListDataModel } from "../../../../core/models/ListDataModel";
 import { ScrollView } from "react-native-gesture-handler";
 import { ScheduledRollHistoryDTO } from "../../../../core/dtos/ScheduledRollHistoryDTO";
+import { LocationAccuracy, LocationObject, getCurrentPositionAsync, requestForegroundPermissionsAsync, watchPositionAsync } from "expo-location";
+import * as geolib from 'geolib';
 
 export type StackParamList = {
     Class: { userClass: UserClassesDTO};
@@ -171,6 +173,27 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
 
     const handleStartCall = () => {
 
+        async function getLocationPermissionsAsync() {
+            const { granted } = await requestForegroundPermissionsAsync();
+    
+            if(!granted) {
+                Alert.alert("Permissão de localização", "Para utilizar o aplicativo é necessário permitir o acesso a localização.");
+            } else {
+                const location = await getCurrentPositionAsync();
+                console.log(location.coords)
+                console.log(
+                    'You are ',
+                    geolib.getDistance(location.coords, {
+                        latitude: -22.905,
+                        longitude: -43.132,
+                    }),
+                    'meters away from -22.905, -43.132'
+                );
+    
+                return location;
+            }
+        }
+
         const startCall = async () => {
             const response = await axios.get<ScheduledRollHistoryDTO[]>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendanceRoll/ongoing/${userClass.id_class}`);
 
@@ -179,14 +202,16 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
             if(currentAttendanceRoll[0]) {
                 Alert.alert('CHAMADA NÃO INICIADA', 'Uma chamada ja foi iniciada pelo professor.');
             }else {
-                startCallAlert();
+                const location = await getLocationPermissionsAsync();
+
+                startCallAlert(location);
             }
         }
 
         startCall();
     }
 
-    const startCallAlert = () =>
+    const startCallAlert = (location: LocationObject | undefined) =>
     Alert.alert('INICIAR CHAMADA', 'Tem certeza que quer iniciar uma chamada?', [
       {
         text: 'Cancel',
@@ -238,6 +263,16 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
         }
       },
     ]);
+
+    useEffect(() => {
+        watchPositionAsync({
+            accuracy: LocationAccuracy.Highest,
+            timeInterval: 1000,
+            distanceInterval: 1
+        }, (location) => {
+            console.log(location.coords)
+        })
+    }, []);
 
     useEffect(() => {
         const fetchClassStats = async () => {

@@ -8,6 +8,10 @@ import moment from "moment";
 import { UserClassesDTO } from "../../../../core/dtos/UserClassesDTO";
 import { TableDataModel } from "../../../../core/models/TableDataModel";
 import { ScheduledRollHistoryDTO } from "../../../../core/dtos/ScheduledRollHistoryDTO";
+import { LocationAccuracy, getCurrentPositionAsync, requestForegroundPermissionsAsync, watchPositionAsync, LocationObject } from "expo-location";
+import * as geolib from 'geolib';
+import MapView, { Marker } from "react-native-maps";
+import { styles } from "../../../../../styles";
 
 export type StackParamList = {
     Class: { userClass: UserClassesDTO};
@@ -58,6 +62,14 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
     }
 
     const [modalVisible, setModalVisible] = useState(false)
+
+    const [showMap, setShowMap] = useState(false);
+
+    const onShowMapChange = () => {
+        setShowMap(!showMap);
+    }
+
+    const [location, setLocation] = useState<LocationObject | null>(null);
 
     const [date, setDate] = useState({
         dateStart: new Date(),
@@ -177,6 +189,41 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
         deleteAttendenceRoll();
       }},
     ]);
+
+    async function requestLocationPermissionsAsync() {
+        const { granted } = await requestForegroundPermissionsAsync();
+
+        if(!granted) {
+            Alert.alert("Permissão de localização", "Para utilizar o aplicativo é necessário permitir o acesso a localização.");
+        } else {
+            const location = await getCurrentPositionAsync();
+            console.log(location.coords)
+            console.log(
+                'You are ',
+                geolib.getDistance(location.coords, {
+                    latitude: -22.905,
+                    longitude: -43.132,
+                }),
+                'meters away from -22.905, -43.132'
+            );
+
+            setLocation(location);
+        }
+    }
+
+    useEffect(() => {
+        requestLocationPermissionsAsync();
+    }, []);
+
+    useEffect(() => {
+        watchPositionAsync({
+            accuracy: LocationAccuracy.Highest,
+            timeInterval: 1000,
+            distanceInterval: 1
+        }, (location) => {
+            setLocation(location);
+        })
+    }, []);
 
     useEffect(() => {
 
@@ -305,14 +352,54 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
                                 )}
                             </View>
                         </View>
+
+                        <View>
+                            <View className="flex-row items-center justify-evenly mb-4">
+                                <View className="w-1/2 flex-col mb-2">
+                                    <Text className="text-base text-center my-4">Definir localização:</Text>
+                                    <Button title="LOCALIZAÇÃO" color='blue' onPress={onShowMapChange} />
+                                </View>
+                            </View>
+                            <View className="text-lg flex-col items-center justify-center">
+                                <Text className="text-lg font-bold mb-2">Latitude:</Text>
+                                <Text className="mb-4 text-base">{location?.coords.latitude}</Text>
+
+                                <Text className="text-lg font-bold mb-2">Longitude:</Text>
+                                <Text className="mb-4 text-base">{location?.coords.longitude}</Text>
+                            </View>
+                        </View>
+
+                        {
+                            (showMap && location) &&
+                            <MapView 
+                                style={styles.map}
+                                initialRegion={{
+                                    latitude: location.coords.latitude,
+                                    longitude: location.coords.longitude,
+                                    latitudeDelta: 0.005,
+                                    longitudeDelta: 0.005,
+                                }}
+                            >
+                                <Marker 
+                                    coordinate= {{
+                                        latitude: location.coords.latitude,
+                                        longitude: location.coords.longitude
+                                    }}                                        
+                                />
+                            </MapView>
+                        }
                     </ScrollView>
 
-                    <View className="flex-col mb-8">
+                    <View className="flex-col mb-8 mt-2">
                         <View className="mb-2">
                             <Button title="CONFIRMAR" color='green' onPress={handleCreateScheduledRoll} />
                         </View>
-                        <Button title="CANCELAR" color='red' onPress={() => {
-                            setModalVisible(!modalVisible);
+                        <Button title="FECHAR" color='red' onPress={() => {
+                            if(showMap) {
+                                setShowMap(!showMap);
+                            } else {
+                                setModalVisible(!modalVisible);
+                            }
                         }} />
                     </View>
                 </View>
