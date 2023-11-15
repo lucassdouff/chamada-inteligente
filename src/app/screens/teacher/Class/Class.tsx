@@ -42,6 +42,8 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
 
     const [modalVisible, setModalVisible] = useState(false);
 
+    const [location, setLocation] = useState<LocationObject | null>(null);
+
     const changeAttendenceAlert = (id_student: number | undefined) =>
     Alert.alert('MODIFICAR PRESENÇA', 'Selecione a opção de presença desejada:', [
         {
@@ -173,27 +175,6 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
 
     const handleStartCall = () => {
 
-        async function getLocationPermissionsAsync() {
-            const { granted } = await requestForegroundPermissionsAsync();
-    
-            if(!granted) {
-                Alert.alert("Permissão de localização", "Para utilizar o aplicativo é necessário permitir o acesso a localização.");
-            } else {
-                const location = await getCurrentPositionAsync();
-                console.log(location.coords)
-                console.log(
-                    'You are ',
-                    geolib.getDistance(location.coords, {
-                        latitude: -22.905,
-                        longitude: -43.132,
-                    }),
-                    'meters away from -22.905, -43.132'
-                );
-    
-                return location;
-            }
-        }
-
         const startCall = async () => {
             const response = await axios.get<ScheduledRollHistoryDTO[]>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendanceRoll/ongoing/${userClass.id_class}`);
 
@@ -202,8 +183,6 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
             if(currentAttendanceRoll[0]) {
                 Alert.alert('CHAMADA NÃO INICIADA', 'Uma chamada ja foi iniciada pelo professor.');
             }else {
-                const location = await getLocationPermissionsAsync();
-
                 startCallAlert(location);
             }
         }
@@ -211,7 +190,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
         startCall();
     }
 
-    const startCallAlert = (location: LocationObject | undefined) =>
+    const startCallAlert = (location: LocationObject | null) =>
     Alert.alert('INICIAR CHAMADA', 'Tem certeza que quer iniciar uma chamada?', [
       {
         text: 'Cancel',
@@ -228,6 +207,8 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                     {
                         id_class: userClass.id_class,
                         start_datetime: new Date(),
+                        latitude: location?.coords.latitude,
+                        longitude: location?.coords.longitude,
                     },
                 );
 
@@ -265,12 +246,28 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
     ]);
 
     useEffect(() => {
+        async function getLocationPermissionsAsync() {
+            const { granted } = await requestForegroundPermissionsAsync();
+    
+            if(!granted) {
+                Alert.alert("Permissão de localização", "Para utilizar o aplicativo é necessário permitir o acesso a localização.");
+            } else {
+                const location = await getCurrentPositionAsync();
+    
+                setLocation(location);
+            }
+        }
+
+        getLocationPermissionsAsync();
+    }, []);
+
+    useEffect(() => {
         watchPositionAsync({
             accuracy: LocationAccuracy.Highest,
             timeInterval: 1000,
             distanceInterval: 1
         }, (location) => {
-            console.log(location.coords)
+            setLocation(location);
         })
     }, []);
 
@@ -334,7 +331,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
     return(
         <ScrollView className="flex-col py-2 px-4 w-full mt-2 divide-gray-500 divide-y overflow-auto">
             <View className="mb-6">
-                <ClassCardComponent userClass={userClass} staticMode schedule={userClass.class_schedule} iconActionButton={()=>{
+                <ClassCardComponent userClass={userClass} staticMode schedule={userClass.class_weekdays} iconActionButton={()=>{
                     navigation.navigate("Gerenciar Turma", {userClass : userClass})
                 }} />
 

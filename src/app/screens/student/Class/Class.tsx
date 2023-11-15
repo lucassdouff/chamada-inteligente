@@ -13,6 +13,8 @@ import { StudentRollHistoryDTO } from "../../../../core/dtos/StudentRollHistoryD
 import { TableDataModel } from "../../../../core/models/TableDataModel";
 import moment from "moment";
 import { ScheduledRollHistoryDTO } from "../../../../core/dtos/ScheduledRollHistoryDTO";
+import { LocationAccuracy, LocationObject, getCurrentPositionAsync, requestForegroundPermissionsAsync, watchPositionAsync } from "expo-location";
+import * as geolib from 'geolib';
 
 export type StackParamList = {
     Class: { userClass: UserClassesDTO};
@@ -23,6 +25,8 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
     const [isEnabled, setIsEnabled] = useState(false);
     const [studentAttendanceStats, setStudentAttendanceStats] = useState<StudentAttendanceStatsDTO>();
     const [studentRollHistory, setStudentRollHistory] = useState<TableDataModel[][]>();
+
+    const [location, setLocation] = useState<LocationObject | null>(null);
 
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
     
@@ -42,7 +46,14 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                 Alert.alert('PRESENÇA JÁ INDICADA', 'Presença já indicada para essa aula.');
             } else {
                 if(currentAttendanceRoll[0]) {
-                    createAttendanceAlert(currentAttendanceRoll[0].id_attendance_roll, userSession?.id);
+                    if(location && (geolib.getDistance(location.coords, {
+                        latitude: currentAttendanceRoll[0].latitude,
+                        longitude: currentAttendanceRoll[0].longitude,
+                    }) <= 13)) {
+                        createAttendanceAlert(currentAttendanceRoll[0].id_attendance_roll, currentAttendanceRoll[0].start_datetime, userSession?.id);
+                    } else {
+                        Alert.alert('LOCALIZAÇÃO INVÁLIDA', 'Você não está no local da aula.');
+                    }
                 }else {
                     Alert.alert('CHAMADA NÃO INICIADA', 'A chamada ainda não foi iniciada pelo professor.');
                 }
@@ -52,7 +63,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
         fetchCurrentAttendanceRoll();
     }
 
-    const createAttendanceAlert = (id_attendance_roll: number, id_student: number | undefined) =>
+    const createAttendanceAlert = (id_attendance_roll: number, start_datetime: Date, id_student: number | undefined) =>
     Alert.alert('CHAMADA EM ANDAMENTO', 'Indicar presença?', [
       {
         text: 'Cancel',
@@ -73,6 +84,26 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                 );
 
                 if(response.status === 200) {
+
+                    setStudentRollHistory(prevState => {
+                        const newState = prevState?.map(attendance => {
+                            if(attendance[0].text === id_attendance_roll.toString()) {
+                                attendance[3].text = 'PRESENTE';
+                                attendance[4].action = () => {
+                                    navigation.navigate('Consultar Aula', {
+                                        attendance_id: id_attendance_roll,
+                                        start_date: start_datetime,
+                                        presence: true,
+                                    });
+                                }
+                            }
+                            return attendance;
+                        });
+
+                        return newState;
+                    
+                    });
+
                     Alert.alert('PRESENÇA INDICADA', 'Presença indicada com sucesso!');
                 } else {
                     Alert.alert('ERRO', 'Erro ao indicar presença!');
@@ -89,6 +120,32 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
     ]);
 
     useEffect(() => {
+        async function getLocationPermissionsAsync() {
+            const { granted } = await requestForegroundPermissionsAsync();
+    
+            if(!granted) {
+                Alert.alert("Permissão de localização", "Para utilizar o aplicativo é necessário permitir o acesso a localização.");
+            } else {
+                const location = await getCurrentPositionAsync();
+    
+                setLocation(location);
+            }
+        }
+
+        getLocationPermissionsAsync();
+    }, []);	
+
+    useEffect(() => {
+        watchPositionAsync({
+            accuracy: LocationAccuracy.Highest,
+            timeInterval: 1000,
+            distanceInterval: 1
+        }, (location) => {
+            setLocation(location);
+        })
+    }, []);
+
+    useEffect(() => {
         const fetchStudentAttendanceStats = async () => {
             const response = await axios.get<StudentAttendanceStatsDTO>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendance/stats/${userClass.id_class}/${userSession?.id}`)
                 .catch(error => {console.log(error.response.data)});
@@ -98,6 +155,11 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
             setStudentAttendanceStats(userAttendanceStats);
         };
 
+        fetchStudentAttendanceStats();
+
+    }, [userClass.id_class, userSession?.id, studentRollHistory]);
+
+    useEffect(() => {
         const fetchStudentRollHistory = async () => {
             try {
                 const response = await axios.get<StudentRollHistoryDTO[]>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendanceRoll/history/student`, {
@@ -115,6 +177,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
 
                 userAttendanceRollHistory?.forEach(attendance => {
                     const historyItem = [
+                        {text: attendance.id_attendance_roll.toString(), action: undefined},
                         {text: new Date(attendance.start_datetime).toLocaleDateString(), action: undefined},
                         {text: moment(attendance.start_datetime).format("LT") + (attendance.end_datetime ? " - " + moment(attendance.end_datetime).format("LT") : ''), action: undefined},
                         {text: attendance.present ? 'PRESENTE' : 'AUSENTE', action: undefined},
@@ -141,8 +204,6 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
     
         fetchStudentRollHistory();
         
-        fetchStudentAttendanceStats();
-
     }, [userClass.id_class, userSession?.id]);
    
     const navigation = useNavigation<StackNavigationProp<any>>();
@@ -150,7 +211,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
     return(
         <ScrollView className="flex-col py-2 px-4 w-full mt-2 divide-gray-500 divide-y overflow-auto">
             <View className="mb-6">
-                <ClassCardComponent userClass={userClass} staticMode schedule={userClass.class_schedule} />
+                <ClassCardComponent userClass={userClass} staticMode schedule={userClass.class_weekdays} />
 
                 <View className="flex-row justify-between items-center px-2">
                     <Text className="text-lg">Presença Automática:</Text>
@@ -188,7 +249,15 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
             <View className="flex-col mb-4">
                 <Text className="my-4 text-xl">Histórico de aulas</Text>
                 <View className="self-center">
-                    <TableComponent tableData={studentRollHistory} />
+                    <TableComponent tableData={studentRollHistory?.map((item, index) => {
+                        if(index !== 0) {
+                            return item.filter((item, i) => {
+                                return i !== 0;
+                            });
+                        }
+
+                        return item;
+                    })} />
                 </View>
             </View>
         </ScrollView>

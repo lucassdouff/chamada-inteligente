@@ -31,7 +31,9 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
                     {
                         id_class: userClass.id_class,
                         start_datetime: date.dateStart,
-                        end_datetime: date.dateEnd
+                        end_datetime: date.dateEnd,
+                        latitude: location?.coords.latitude,
+                        longitude: location?.coords.longitude
                     },
                 );
 
@@ -190,28 +192,19 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
       }},
     ]);
 
-    async function requestLocationPermissionsAsync() {
-        const { granted } = await requestForegroundPermissionsAsync();
-
-        if(!granted) {
-            Alert.alert("Permissão de localização", "Para utilizar o aplicativo é necessário permitir o acesso a localização.");
-        } else {
-            const location = await getCurrentPositionAsync();
-            console.log(location.coords)
-            console.log(
-                'You are ',
-                geolib.getDistance(location.coords, {
-                    latitude: -22.905,
-                    longitude: -43.132,
-                }),
-                'meters away from -22.905, -43.132'
-            );
-
-            setLocation(location);
-        }
-    }
-
     useEffect(() => {
+        async function requestLocationPermissionsAsync() {
+            const { granted } = await requestForegroundPermissionsAsync();
+    
+            if(!granted) {
+                Alert.alert("Permissão de localização", "Para utilizar o aplicativo é necessário permitir o acesso a localização.");
+            } else {
+                const location = await getCurrentPositionAsync();
+    
+                setLocation(location);
+            }
+        }
+        
         requestLocationPermissionsAsync();
     }, []);
 
@@ -394,7 +387,9 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
                         <View className="mb-2">
                             <Button title="CONFIRMAR" color='green' onPress={handleCreateScheduledRoll} />
                         </View>
-                        <Button title="FECHAR" color='red' onPress={() => {
+                        <Button title={
+                            showMap ? "VOLTAR" : "CANCELAR"
+                        } color='red' onPress={() => {
                             if(showMap) {
                                 setShowMap(!showMap);
                             } else {

@@ -4,5 +4,7 @@ export interface TeacherRollHistoryDTO {
     start_datetime: Date,
     end_datetime: Date,
     present_students: number,
-    percentage: number
+    percentage: number,
+    latitude: number,
+    longitude: number,
 }

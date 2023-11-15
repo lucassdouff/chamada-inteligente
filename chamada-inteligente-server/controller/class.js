@@ -19,7 +19,7 @@ exports.getClasses = async (req, res, next) => {
 
 
 const getTeacherClasses = async(id_teacher) => {
-    console.log(id_teacher);
+
     const classes = await Class.findAll({
         where: {
             id_teacher
@@ -48,13 +48,14 @@ const getStudentClasses = async(id_student) => {
      join student s on s.id_student = cs.id_student where cs.id_student = ${id_student};`);
 
     const promises = results.map(async (classObj) => {
+
         const weekdays = await Class_Weekday.findAll({
             where: {
                 id_class: classObj.id_class
             }
         });
         return {
-            ...classObj.dataValues,
+            ...classObj,
             class_weekdays: weekdays
         }
     });
@@ -150,8 +151,8 @@ exports.removeClass = async (req, res, next) => {
 exports.getStudentsByClassID = async (req, res, next) => {
     const { id_class } = req.query;
     try{
-        const [results, metadata] = await sequelize.query(`select s.*,u.name, count(a.id_attendance) as count from student s 
-        join class_student cs on cs.id_student = s.id_student JOIN user u on u.id_user = s.id_student JOIN attendance a on a.id_student = s.id_student where cs.id_class = ${id_class} and a.validation = true
+        const [results, metadata] = await sequelize.query(`select s.*, u.name, count(a.id_attendance) as count from student s LEFT JOIN attendance a on a.id_student = s.id_student
+        join class_student cs on cs.id_student = s.id_student JOIN user u on u.id_user = s.id_student where cs.id_class = ${id_class}
         group by s.id_student;`);
 
         const [count] = await sequelize.query(`select count(1) as count from attendance_roll where id_class = ${id_class} and start_datetime < now();`)
@@ -183,7 +184,7 @@ exports.getClassStats = async (req, res, next) => {
 
         const result = {
             totalStudents: count,
-            attendancePercentage: (attendanceCount[0].count/attendanceRollCount[0].count)
+            attendancePercentage: attendanceRollCount[0].count ? (attendanceCount[0].count/attendanceRollCount[0].count) : 0
         }
 
         return res.status(200).json(result);
