@@ -230,6 +230,14 @@ const Attendance_roll = database.define('attendance_roll', {
         type: Sequelize.DATE,
         allowNull: true
     },
+    latitude: {
+        type: Sequelize.DOUBLE,
+        allowNull: true
+    },
+    longitude: {
+        type: Sequelize.DOUBLE,
+        allowNull: true
+    }
 }, opts);
 
 const Attendance = database.define('attendance', {

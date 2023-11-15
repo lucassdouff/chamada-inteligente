@@ -4,13 +4,13 @@ const { Op } = require('sequelize');
 const { countStudentsInClass } = require('./class');
 
 exports.createAttendanceRoll = async (req,res,next) =>{
-    const {id_class, start_datetime, end_datetime} = req.body;
+    const {id_class, start_datetime, end_datetime, latitude, longitude} = req.body;
 
     const attendanceRollDatetime = start_datetime ? new Date(start_datetime) : new Date();
     const attendanceRoll = await Attendance_roll.create({
         id_class,
         start_datetime: attendanceRollDatetime,
-        end_datetime
+        end_datetime,latitude,longitude    
     })
 
     return res.status(200).json(attendanceRoll);
