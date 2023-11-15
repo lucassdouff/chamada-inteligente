@@ -3,6 +3,7 @@ const { Class, Class_Student, Class_Weekday } = require('../models/models');
 
 exports.getClasses = async (req, res, next) => {
     const {id, role} = req.query;
+    console.log(id, role)
     try {
         if (role === "teacher") {
             const classes = await getTeacherClasses(id);
@@ -18,12 +19,27 @@ exports.getClasses = async (req, res, next) => {
 
 
 const getTeacherClasses = async(id_teacher) => {
+    console.log(id_teacher);
     const classes = await Class.findAll({
         where: {
             id_teacher
         }
     })
-    return classes
+
+    const promises = classes.map(async (classObj) => {
+        const weekdays = await Class_Weekday.findAll({
+            where: {
+                id_class: classObj.id_class
+            }
+        });
+        return {
+            ...classObj.dataValues,
+            class_weekdays: weekdays
+        }
+    });
+
+    const result = await Promise.all(promises);
+    return result
 }
 
 
@@ -31,17 +47,34 @@ const getStudentClasses = async(id_student) => {
     const [results, metadata] = await sequelize.query(`select c.* from class c join class_student cs on cs.id_class = c.id_class
      join student s on s.id_student = cs.id_student where cs.id_student = ${id_student};`);
 
-    return results;
+    const promises = results.map(async (classObj) => {
+        const weekdays = await Class_Weekday.findAll({
+            where: {
+                id_class: classObj.id_class
+            }
+        });
+        return {
+            ...classObj.dataValues,
+            class_weekdays: weekdays
+        }
+    });
+
+    const result = await Promise.all(promises);
+    return result;
 }
 
 
 exports.addClass = async(req,res,next) => {
-    const {name, class_schedule, code, duration, semester, id_teacher, id_course} = req.body
+    const {name, code, semester, id_teacher, id_course, class_weekdays} = req.body
     try {
-
-        const class_ = await Class.create({name, class_schedule, code, duration, semester, id_teacher, id_course});
-        return res.status(200).json(class_);
-
+        const classObj = await Class.create({name, code, semester, id_teacher, id_course});
+        const promises = class_weekdays.map(async (class_weekday) => {
+            const {weekday, start_hour, end_hour} = class_weekday;
+            return await Class_Weekday.create({id_class: classObj.id_class, weekday, start_hour, end_hour});
+        });
+        Promise.all(promises).then((values) => {
+            return res.status(200).json({...classObj.dataValues , class_weekdays: values});
+        });
     } catch {
         res.status(500).json({error: "An error occurred while adding a class"});
     } 
@@ -70,9 +103,7 @@ exports.editClass = async (req, res, next) => {
     }
 
     if (name) classToUpdate.name = name;
-    if (class_schedule) classToUpdate.class_schedule = class_schedule;
     if (code) classToUpdate.code = code;
-    if (duration) classToUpdate.duration = duration;
     if (semester) classToUpdate.semester = semester;
     if (id_teacher) classToUpdate.id_teacher = id_teacher;
     if (id_course) classToUpdate.id_course = id_course;

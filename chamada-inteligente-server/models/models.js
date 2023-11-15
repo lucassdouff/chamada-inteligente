@@ -127,16 +127,8 @@ const Class = database.define('class',{
         type:Sequelize.STRING,
         allowNull: false
     },
-    class_schedule: {
-        type: Sequelize.TIME,
-        allowNull: false
-    },
     code: {
         type: Sequelize.STRING,
-        allowNull: false
-    },
-    duration: {
-        type: Sequelize.INTEGER,
         allowNull: false
     },
     semester: {
@@ -176,15 +168,15 @@ const Class_Weekday = database.define('class_weekday', {
         primaryKey: true,
         allowNull: false,
     },
-    duration: {
-        type: Sequelize.INTEGER,
+    end_hour: {
+        type: Sequelize.TIME,
         allowNull: false, 
     },
     start_hour: {
         type: Sequelize.TIME,
         allowNull: false,
     }
-});
+}, opts);
 
 const Class_Student = database.define('class_student', {
     id_class: {
