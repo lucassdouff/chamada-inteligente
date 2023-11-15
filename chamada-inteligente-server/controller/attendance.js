@@ -1,4 +1,4 @@
-const { Attendance, Attendance_roll, Class, Class_Student } = require('../models/models');
+const { Attendance, Attendance_roll, Class, Class_Student, Class_Weekday } = require('../models/models');
 const { Op, DATE } = require('sequelize');
 const sequelize = require('../util/database');
 
@@ -6,10 +6,10 @@ exports.createAttendance = async(req, res, next) => {
     const {medical_certificate, id_attendance_roll, id_student} = req.body
 
     try {
-        const datetime = new Date().getHours();
+        const hour = new Date().getHours();
         const minutes = new Date().getMinutes();
         const attendance = await Attendance.create({
-            hour : `${datetime}:${minutes}`,
+            hour : `${hour}:${minutes}`,
             validation: true,
             medical_certificate,
             id_attendance_roll,
@@ -74,7 +74,7 @@ exports.getStudentAttendanceStats = async (req, res, next) => {
         const totalClassSessions = await Attendance_roll.count({
             where: { id_class }
         });
-
+        
         // Buscar todas as Attendance do aluno para essa class com detalhes do Attendance_roll
         const response = await sequelize.query(`Select a.*, ar.start_datetime from attendance a 
         join attendance_roll ar on a.id_attendance_roll = ar.id_attendance_roll where a.id_student = ${id_student} and ar.id_class = ${id_class} and a.validation = true`);
@@ -83,24 +83,37 @@ exports.getStudentAttendanceStats = async (req, res, next) => {
 
         // Calcular o tempo total de ausencia do aluno
         let totalAbsenceTime = 0;
-        studentAttendancesDetails.forEach(attendance => {
+        studentAttendancesDetails.forEach(async (attendance) => {
             const classStartTime = new Date(attendance.start_datetime);
+            const attendanceHour = attendance.hour.split(':');
+            const attendanceTime = new Date(0, 0, 0, attendanceHour[0], attendanceHour[1]);
 
-            const delay = (attendance.hour - classStartTime) / 60000; // Convertendo para min
+            const delay = ((attendanceTime.getHours() - classStartTime.getHours()) / 60) + (attendanceTime.getMinutes() - classStartTime.getMinutes()); // Convertendo para min
             totalAbsenceTime += delay;
         });
+        
+        const weekdays = await Class_Weekday.findAll({
+            where: { id_class }
+        });
 
-        // Buscar detalhes da class (especificamente a duração)
-        const classDetails = await Class.findByPk(id_class);
+
+        const averageClassTime = (weekdays.reduce((acc, weekday) => {
+          const weekdayStartHour = weekday.dataValues.start_hour.split(':');
+          const weekdayEndHour = weekday.dataValues.end_hour.split(':');
+          const startHour = new Date(0, 0, 0, weekdayStartHour[0], weekdayStartHour[1]);
+          const endHour = new Date(0, 0, 0, weekdayEndHour[0], weekdayEndHour[1]);
+
+          return acc + (endHour - startHour);
+        }, 0)/weekdays.length)/60000;
 
         // Tempo medio de ausencia
-        let averageAbsenceTime = (classDetails.duration * 60);
+        let averageAbsenceTime = averageClassTime;
         if (studentAttendancesDetails.length > 0) {
             averageAbsenceTime = totalAbsenceTime / studentAttendancesDetails.length;
         }
 
         // Tempo medio de presenca
-        const averagePresenceTime = (classDetails.duration * 60) - averageAbsenceTime;
+        const averagePresenceTime = averageClassTime - averageAbsenceTime;
 
         // Percentual de faltas
         const absencePercentage = totalClassSessions ? ((totalClassSessions - studentAttendancesDetails.length) / totalClassSessions) * 100 : 0;
