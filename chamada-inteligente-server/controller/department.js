@@ -49,7 +49,7 @@ exports.deleteDepartment = async(req, res) => {
         const departmentToDelete = await Department.findByPk(departmentId);
 
         if (!departmentToDelete){
-            return res.status(404).jsonn({ error: 'Department not found.'});
+            return res.status(404).json({ error: 'Department not found.'});
         }
 
         await departmentToDelete.destroy();

@@ -94,7 +94,7 @@ exports.assignStudent = async(req,res,next) => {
 
 exports.editClass = async (req, res, next) => {
   const classId = req.params.id;
-  const { name, class_schedule, code, duration, semester, id_teacher, id_course } = req.body;
+  const { name, code, semester, id_teacher, id_course } = req.body;
 
   try {
     const classToUpdate = await Class.findByPk(classId);
