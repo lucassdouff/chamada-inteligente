@@ -1,0 +1,122 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ClassCard component should render correctly renders correctly 1`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessible={true}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "height": 96,
+      },
+      {
+        "display": "flex",
+      },
+      {
+        "flexDirection": "column",
+      },
+      {
+        "paddingLeft": 12,
+        "paddingRight": 12,
+      },
+      {
+        "paddingBottom": 8,
+        "paddingTop": 8,
+      },
+      {
+        "borderBottomWidth": 1,
+        "borderLeftWidth": 1,
+        "borderRightWidth": 1,
+        "borderTopWidth": 1,
+      },
+      {
+        "borderBottomColor": "#9ca3af",
+        "borderLeftColor": "#9ca3af",
+        "borderRightColor": "#9ca3af",
+        "borderTopColor": "#9ca3af",
+      },
+      {
+        "borderBottomLeftRadius": 4,
+        "borderBottomRightRadius": 4,
+        "borderTopLeftRadius": 4,
+        "borderTopRightRadius": 4,
+      },
+      {
+        "marginBottom": 12,
+      },
+      {
+        "backgroundColor": "#2563eb",
+      },
+    ]
+  }
+>
+  <View
+    style={
+      [
+        {
+          "flexDirection": "row",
+        },
+        {
+          "justifyContent": "space-between",
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "width": "80%",
+          },
+        ]
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "color": "#fff",
+            },
+            {
+              "fontSize": 18,
+              "lineHeight": 28,
+            },
+          ]
+        }
+      >
+        123456 - Class 1
+      </Text>
+    </View>
+  </View>
+  <Text
+    style={
+      [
+        {
+          "color": "#fff",
+        },
+        {
+          "marginBottom": 8,
+        },
+      ]
+    }
+  >
+    2021-1
+  </Text>
+</View>
+`;

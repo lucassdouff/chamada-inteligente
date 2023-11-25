@@ -1,0 +1,119 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ListItem component should render correctly and do some action renders correctly 1`] = `
+<View
+  style={
+    [
+      {
+        "marginTop": 8,
+      },
+      {
+        "paddingBottom": 14,
+        "paddingTop": 14,
+      },
+      {
+        "flexDirection": "row",
+      },
+      {
+        "justifyContent": "space-between",
+      },
+      {
+        "borderBottomWidth": 1,
+      },
+      {
+        "borderBottomColor": "#d1d5db",
+      },
+      {
+        "width": "97%",
+      },
+      {
+        "alignItems": "center",
+      },
+    ]
+  }
+  testID="list-item"
+>
+  <View
+    style={
+      [
+        {
+          "paddingLeft": 4,
+          "paddingRight": 4,
+        },
+        {
+          "flexDirection": "row",
+        },
+        {
+          "alignItems": "center",
+        },
+        {
+          "marginLeft": -16,
+          "marginTop": -16,
+        },
+      ]
+    }
+  >
+    <Image
+      source={1}
+      style={
+        [
+          {
+            "height": 32,
+            "width": 32,
+          },
+          [
+            {
+              "marginLeft": 16,
+              "marginTop": 16,
+            },
+          ],
+        ]
+      }
+    />
+    <Text
+      style={
+        [
+          {
+            "marginLeft": 16,
+            "marginTop": 16,
+          },
+        ]
+      }
+    >
+      Student 1
+    </Text>
+  </View>
+  <Text
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      [
+        {
+          "textDecorationLine": "underline",
+        },
+        {
+          "color": "#dc2626",
+        },
+      ]
+    }
+  >
+    AUSENTE
+  </Text>
+</View>
+`;

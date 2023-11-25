@@ -24,7 +24,7 @@ export default function ListItemComponent({itemData} : ListItemComponentProps){
     }
 
     return (
-        <View className='mt-2 border-spacing-y-2 py-3.5 flex-row justify-between border-b border-b-gray-300 w-[97%] items-center'>
+        <View testID="list-item" className='mt-2 border-spacing-y-2 py-3.5 flex-row justify-between border-b border-b-gray-300 w-[97%] items-center'>
             <View className='px-1 flex-row items-center gap-4'>
                 <Image source={require('../../../assets/perfil.png')}style={{width: 32, height: 32}}/>
                 
