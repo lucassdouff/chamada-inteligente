@@ -3,7 +3,7 @@ const { Class, Class_Student, Class_Weekday } = require('../models/models');
 
 exports.getClasses = async (req, res, next) => {
     const {id, role} = req.query;
-    console.log(id, role)
+
     try {
         if (role === "teacher") {
             const classes = await getTeacherClasses(id);
@@ -32,12 +32,13 @@ const getTeacherClasses = async(id_teacher) => {
                 id_class: classObj.id_class
             }
         });
+        console.log(weekdays, classObj)
         return {
             ...classObj.dataValues,
             class_weekdays: weekdays
         }
     });
-
+    
     const result = await Promise.all(promises);
     return result
 }
@@ -73,8 +74,9 @@ exports.addClass = async(req,res,next) => {
             const {weekday, start_hour, end_hour} = class_weekday;
             return await Class_Weekday.create({id_class: classObj.id_class, weekday, start_hour, end_hour});
         });
-        Promise.all(promises).then((values) => {
-            return res.status(200).json({...classObj.dataValues , class_weekdays: values});
+        await Promise.all(promises).then((values) => {
+            
+            res.status(200).json({...classObj.dataValues , class_weekdays: values});
         });
     } catch {
         res.status(500).json({error: "An error occurred while adding a class"});
@@ -156,7 +158,7 @@ exports.getStudentsByClassID = async (req, res, next) => {
         group by s.id_student;`);
 
         const [count] = await sequelize.query(`select count(1) as count from attendance_roll where id_class = ${id_class} and start_datetime < now();`)
-        console.log(results)
+
         const students = results.map((student) => {
             return {
                 ...student,

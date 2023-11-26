@@ -4,7 +4,7 @@ const { Department } = require('../models/models');
 exports.getAllDepartment = async(req, res) => {
     try{
         const departments = await Department.findAll();
-        res.json(departments);
+        res.status(200).json(departments);
     }catch(error){
         console.error("An error occurred while get all the department: ", error);
         res.status(500).json({error: 'An error occurred while get all the department'});
@@ -15,7 +15,7 @@ exports.createDepartment = async(req, res) => {
     try {
         const { name } = req.body;
         const newDepartment = await Department.create({name});
-        res.json(newDepartment);
+        res.status(200).json(newDepartment);
     }catch(error){
         console.error("An error occurred while creating the department: ", error);
         res.status(500).json({error: 'An error occurred while creating the department'});
@@ -33,10 +33,10 @@ exports.updateDepartment = async(req, res) => {
         }
 
         departmentToUpdate.name = name || departmentToUpdate.name;
-
+        
         await departmentToUpdate.save();
 
-        res.json(departmentToUpdate);
+        res.status(200).json(departmentToUpdate);
     }catch(error){
         console.error("An error occurred while updating the department", error);
         res.status(500).json({error: 'An error occurred while updating the department'})
@@ -78,7 +78,7 @@ exports.getDepartmentByName = async(req, res) => {
             return res.status(404).json({ error: 'Name not found.'});
         }
 
-        res.json(department)
+        res.status(200).json(department)
     }catch(error){
         console.error("An error occurred while fetching the department: ", error);
         res.status(500).json({error: 'An error occurred while fetching the department'});
@@ -103,7 +103,7 @@ exports.getDepartmentById = async(req, res) => {
             return res.status(404).json({ error: 'Id not found.'});
         }
 
-        res.json(department)
+        res.status(200).json(department)
     }catch(error){
         console.error("An error occurred while fetching the department: ", error);
         res.status(500).json({error: 'An error occurred while fetching the department'});
