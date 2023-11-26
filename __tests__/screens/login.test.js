@@ -42,5 +42,8 @@ describe('Login screen should render correctly and be interactable', () => {
         expect(passwordInput.props.value).toBe('12346');
         expect(foundButton).toBeTruthy();
     });
-    
+
+    afterAll(async () => {
+      await new Promise(resolve => setTimeout(() => resolve(), 500)); // avoid jest open handle error
+    });
 });

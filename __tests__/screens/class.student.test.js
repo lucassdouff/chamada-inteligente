@@ -48,10 +48,10 @@ describe('Class screen should render correctly', () => {
             <NavigationContext.Provider value={navContext}>
                 <ClassScreen {...mockedParams} />
             </NavigationContext.Provider>
-        )).toBeTruthy();
+        )).toMatchSnapshot();
     });
     
     afterAll(async () => {
-        await new Promise(resolve => setTimeout(() => resolve(), 100)); // avoid jest open handle error
+        await new Promise(resolve => setTimeout(() => resolve(), 500)); // avoid jest open handle error
     });
 });

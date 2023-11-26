@@ -48,7 +48,10 @@ describe('Manage class screen should render correctly', () => {
             <NavigationContext.Provider value={navContext}>
                 <ManageClassScreen {...mockedParams} />
             </NavigationContext.Provider>
-        )).toBeTruthy();
+        )).toMatchSnapshot();
     });
-    
+
+    afterAll(async () => {
+        await new Promise(resolve => setTimeout(() => resolve(), 500)); // avoid jest open handle error
+    });
 });

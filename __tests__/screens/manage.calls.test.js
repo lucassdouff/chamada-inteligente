@@ -48,7 +48,10 @@ describe('Manage calls screen should render correctly', () => {
             <NavigationContext.Provider value={navContext}>
                 <ManageCallsScreen {...mockedParams} />
             </NavigationContext.Provider>
-        )).toBeTruthy();
+        )).toMatchSnapshot();
     });
     
+    afterAll(async () => {
+        await new Promise(resolve => setTimeout(() => resolve(), 500)); // avoid jest open handle error
+    });
 });

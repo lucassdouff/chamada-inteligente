@@ -15,10 +15,10 @@ describe('Home screen should render correctly', () => {
             <NavigationContext.Provider value={navContext}>
                 <HomeScreen />
             </NavigationContext.Provider>
-        )).toBeTruthy();
+        )).toMatchSnapshot();
     });
     
     afterAll(async () => {
-        await new Promise(resolve => setTimeout(() => resolve(), 100)); // avoid jest open handle error
+        await new Promise(resolve => setTimeout(() => resolve(), 500)); // avoid jest open handle error
     });
 });

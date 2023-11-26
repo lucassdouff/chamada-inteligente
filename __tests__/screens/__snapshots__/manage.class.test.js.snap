@@ -1,0 +1,257 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Manage class screen should render correctly teacher manage class renders correctly 1`] = `
+<RCTScrollView
+  style={
+    [
+      {
+        "flexDirection": "column",
+      },
+      {
+        "paddingBottom": 8,
+        "paddingTop": 8,
+      },
+      {
+        "paddingLeft": 16,
+        "paddingRight": 16,
+      },
+      {
+        "width": "100%",
+      },
+      {
+        "marginTop": 8,
+      },
+    ]
+  }
+>
+  <View>
+    <View
+      style={
+        [
+          {
+            "marginBottom": 24,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "flexDirection": "column",
+            },
+          ]
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "paddingBottom": 8,
+                "paddingLeft": 8,
+                "paddingRight": 8,
+                "paddingTop": 8,
+              },
+              {
+                "marginTop": 4,
+              },
+              {
+                "fontSize": 20,
+                "lineHeight": 28,
+              },
+            ]
+          }
+        >
+          Professores
+        </Text>
+        <View
+          style={
+            [
+              {
+                "flexDirection": "column",
+              },
+              {
+                "alignItems": "center",
+              },
+              [
+                {
+                  "borderBottomWidth": 0,
+                  "borderTopWidth": 1,
+                },
+              ],
+            ]
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "marginTop": 8,
+                },
+                {
+                  "paddingBottom": 14,
+                  "paddingTop": 14,
+                },
+                {
+                  "flexDirection": "row",
+                },
+                {
+                  "justifyContent": "space-between",
+                },
+                {
+                  "borderBottomWidth": 1,
+                },
+                {
+                  "borderBottomColor": "#d1d5db",
+                },
+                {
+                  "width": "97%",
+                },
+                {
+                  "alignItems": "center",
+                },
+              ]
+            }
+            testID="list-item"
+          >
+            <View
+              style={
+                [
+                  {
+                    "paddingLeft": 4,
+                    "paddingRight": 4,
+                  },
+                  {
+                    "flexDirection": "row",
+                  },
+                  {
+                    "alignItems": "center",
+                  },
+                  {
+                    "marginLeft": -16,
+                    "marginTop": -16,
+                  },
+                ]
+              }
+            >
+              <Image
+                source={1}
+                style={
+                  [
+                    {
+                      "height": 32,
+                      "width": 32,
+                    },
+                    [
+                      {
+                        "marginLeft": 16,
+                        "marginTop": 16,
+                      },
+                    ],
+                  ]
+                }
+              />
+              <Text
+                style={
+                  [
+                    {
+                      "marginLeft": 16,
+                      "marginTop": 16,
+                    },
+                  ]
+                }
+              />
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        [
+          {
+            "flexDirection": "column",
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            {
+              "justifyContent": "space-between",
+            },
+            {
+              "alignItems": "center",
+            },
+          ]
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "paddingBottom": 8,
+                "paddingLeft": 8,
+                "paddingRight": 8,
+                "paddingTop": 8,
+              },
+              {
+                "marginTop": 4,
+              },
+              {
+                "fontSize": 20,
+                "lineHeight": 28,
+              },
+            ]
+          }
+        >
+          Alunos
+        </Text>
+        <Text
+          style={
+            [
+              {
+                "paddingBottom": 12,
+                "paddingLeft": 12,
+                "paddingRight": 12,
+                "paddingTop": 12,
+              },
+              {
+                "marginTop": 8,
+              },
+              {
+                "fontSize": 14,
+                "lineHeight": 20,
+              },
+            ]
+          }
+        >
+          undefined aluno(s)
+        </Text>
+      </View>
+      <View
+        style={
+          [
+            {
+              "flexDirection": "column",
+            },
+            {
+              "alignItems": "center",
+            },
+            [
+              {
+                "borderBottomWidth": 0,
+                "borderTopWidth": 1,
+              },
+            ],
+          ]
+        }
+      />
+    </View>
+  </View>
+</RCTScrollView>
+`;
