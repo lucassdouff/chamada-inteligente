@@ -4,7 +4,7 @@ import { navigationController } from "../../../../core/controllers/NavigationCon
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { UserClassesDTO } from "../../../../core/dtos/UserClassesDTO";
-import { useFocusEffect, useNavigation } from "@react-navigation/core";
+import { useFocusEffect } from "@react-navigation/native";
 import React from "react";
 
 export default function HomeScreen() {
@@ -23,7 +23,7 @@ export default function HomeScreen() {
                 onPress: () => null,
                 style: 'cancel',
               },
-              {text: 'YES', onPress: () => BackHandler.exitApp()},
+              {text: 'SIM', onPress: () => BackHandler.exitApp()},
             ]);
             return true;
           };
@@ -38,15 +38,20 @@ export default function HomeScreen() {
     useEffect(() => {
 
         const fetchClasses = async () => {
-            const response = await axios.get<UserClassesDTO[]>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/class`, {
-                params: {
-                    id: userSession?.id, 
-                    role: userSession?.role
-            }}).catch(error => {console.log(error.response.data)});
+            try {
+                const response = await axios.get<UserClassesDTO[]>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/class`, {
+                    params: {
+                        id: userSession?.id, 
+                        role: userSession?.role
+                }});
+    
+                const classes : UserClassesDTO[] | undefined = response?.data;
+                
+                setUserClasses(classes);
 
-            const classes : UserClassesDTO[] | undefined = response?.data;
-            
-            setUserClasses(classes);
+            } catch (error) {
+               return error;
+            }
         };
             
         fetchClasses();

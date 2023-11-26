@@ -80,39 +80,42 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
     const handleAttendenceRoll = (id_attendance_roll: number, end_datetime: Date | undefined) => {
         
         const fetchAttendenceRoll = async () => {
-            const response = await axios.get<AttendenceListItemDTO[]>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendanceRoll/atendees`, {
-                params: {
-                    id_class: userClass.id_class,
-                    id_attendance_roll: id_attendance_roll,
-                }
-            })
-            .catch(error => {console.log(error.response.data)});
-
-            const userAttendenceList : AttendenceListItemDTO[] | undefined = response?.data;
-
-            const attendenceListMapped : ListDataModel[] | undefined = userAttendenceList?.map(attendence => {
-                return {
-                    id: attendence.id_student,
-                    id_course: attendence.id_course,
-                    enrollment: attendence.enrollment,
-                    id_attendance: attendence.id_attendance,
-                    name: attendence.name,
-
-                    info: {
-                        description: attendence.present ? 'PRESENTE' : 'AUSENTE',
-                        action: () => {
-                            changeAttendenceAlert(attendence.id_student);
-                        },
+            try {
+                const response = await axios.get<AttendenceListItemDTO[]>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendanceRoll/atendees`, {
+                    params: {
+                        id_class: userClass.id_class,
+                        id_attendance_roll: id_attendance_roll,
                     }
+                });
+    
+                const userAttendenceList : AttendenceListItemDTO[] | undefined = response?.data;
+    
+                const attendenceListMapped : ListDataModel[] | undefined = userAttendenceList?.map(attendence => {
+                    return {
+                        id: attendence.id_student,
+                        id_course: attendence.id_course,
+                        enrollment: attendence.enrollment,
+                        id_attendance: attendence.id_attendance,
+                        name: attendence.name,
+    
+                        info: {
+                            description: attendence.present ? 'PRESENTE' : 'AUSENTE',
+                            action: () => {
+                                changeAttendenceAlert(attendence.id_student);
+                            },
+                        }
+                    }
+                });
+    
+                setAttendenceList({
+                    attendance_roll: attendenceListMapped || [],
+                    id_attendance_roll: id_attendance_roll,
+                    end_datetime: end_datetime,
                 }
-            });
-
-            setAttendenceList({
-                attendance_roll: attendenceListMapped || [],
-                id_attendance_roll: id_attendance_roll,
-                end_datetime: end_datetime,
+                );
+            } catch (error) {
+                return error;
             }
-            );
         };
 
         fetchAttendenceRoll();
@@ -135,18 +138,23 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                 }
             });
 
-            const response = await axios.put(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendance`, {
-                attendance_roll: attendenceListMapped,
-                id_attendance_roll: attendenceList?.id_attendance_roll,
-            })
-            .catch(error => {console.log(error.response.data)});
+            try {
+                const response = await axios.put(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendance`, {
+                    attendance_roll: attendenceListMapped,
+                    id_attendance_roll: attendenceList?.id_attendance_roll,
+                });
+    
+                if(response?.status === 200) {
+                    setModalVisible(!modalVisible);
+                    Alert.alert('CHAMADA SALVA', 'A chamada foi salva com sucesso!');
+                } else {
+                    Alert.alert('ERRO', 'Ocorreu um erro ao salvar a chamada!');
+                }
 
-            if(response?.status === 200) {
-                setModalVisible(!modalVisible);
-                Alert.alert('CHAMADA SALVA', 'A chamada foi salva com sucesso!');
-            } else {
-                Alert.alert('ERRO', 'Ocorreu um erro ao salvar a chamada!');
+            } catch (error) {
+                return error;
             }
+
         };
 
         updateAttendenceRoll();
@@ -155,18 +163,20 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
     const handleEndAttendanceRoll = () => {
         
         const endAttendanceRoll = async () => {
-
-            const response = await axios.put(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendanceRoll/end`, {
-                id_attendance_roll: attendenceList?.id_attendance_roll,
-	            end_datetime: new Date()
-            })
-            .catch(error => {console.log(error.response.data)});
-
-            if(response?.status === 200) {
-                setModalVisible(!modalVisible);
-                Alert.alert('CHAMADA ENCERRADA', 'A chamada foi encerrada com sucesso!');
-            } else {
-                Alert.alert('ERRO', 'Ocorreu um erro ao encerrar a chamada!');
+            try {
+                const response = await axios.put(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendanceRoll/end`, {
+                    id_attendance_roll: attendenceList?.id_attendance_roll,
+                    end_datetime: new Date()
+                });
+                
+                if(response?.status === 200) {
+                    setModalVisible(!modalVisible);
+                    Alert.alert('CHAMADA ENCERRADA', 'A chamada foi encerrada com sucesso!');
+                } else {
+                    Alert.alert('ERRO', 'Ocorreu um erro ao encerrar a chamada!');
+                }
+            } catch (error) {
+                return error;
             }
         }
 
@@ -176,14 +186,18 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
     const handleStartCall = () => {
 
         const startCall = async () => {
-            const response = await axios.get<ScheduledRollHistoryDTO[]>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendanceRoll/ongoing/${userClass.id_class}`);
-
-            const currentAttendanceRoll : ScheduledRollHistoryDTO[] | undefined = response?.data;
-
-            if(currentAttendanceRoll[0]) {
-                Alert.alert('CHAMADA NÃO INICIADA', 'Uma chamada ja foi iniciada pelo professor.');
-            }else {
-                startCallAlert(location);
+            try{
+                const response = await axios.get<ScheduledRollHistoryDTO[]>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendanceRoll/ongoing/${userClass.id_class}`);
+    
+                const currentAttendanceRoll : ScheduledRollHistoryDTO[] | undefined = response?.data;
+    
+                if(currentAttendanceRoll[0]) {
+                    Alert.alert('CHAMADA NÃO INICIADA', 'Uma chamada ja foi iniciada pelo professor.');
+                }else {
+                    startCallAlert(location);
+                }
+            } catch (error) {
+                return error;
             }
         }
 
@@ -202,7 +216,6 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
 
         const createAttendenceRoll = async () => {
             try {
-
                 const response = await axios.post<TeacherRollHistoryDTO>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/attendanceRoll`, 
                     {
                         id_class: userClass.id_class,
@@ -236,7 +249,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                 }
 
             } catch (error) {
-                console.log(error);
+                return error;
             };
         };
 
@@ -247,14 +260,14 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
 
     useEffect(() => {
         async function getLocationPermissionsAsync() {
-            const { granted } = await requestForegroundPermissionsAsync();
+            const result = await requestForegroundPermissionsAsync();
     
-            if(!granted) {
-                Alert.alert("Permissão de localização", "Para utilizar o aplicativo é necessário permitir o acesso a localização.");
-            } else {
+            if(result && result.status === 'granted') {
                 const location = await getCurrentPositionAsync();
-    
+                
                 setLocation(location);
+            } else {
+                Alert.alert("Permissão de localização", "Para utilizar o aplicativo é necessário permitir o acesso a localização.");
             }
         }
 
@@ -273,16 +286,19 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
 
     useEffect(() => {
         const fetchClassStats = async () => {
-            const response = await axios.get<ClassStatsDTO>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/class/stats`, {
-                params: {
-                    id_class: userClass.id_class,
-                }
-            })
-                .catch(error => {console.log(error.response.data)});
-            
-            const userClassStats : ClassStatsDTO | undefined = response?.data;
-            
-            setClassStats(userClassStats);
+            try {
+                const response = await axios.get<ClassStatsDTO>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/class/stats`, {
+                    params: {
+                        id_class: userClass.id_class,
+                    }
+                });
+                            
+                const userClassStats : ClassStatsDTO | undefined = response?.data;
+                
+                setClassStats(userClassStats);
+            } catch (error) {
+                return error;
+            }
         };
 
         const fetchTeacherRollHistory = async () => {
@@ -318,7 +334,7 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
                 setTeacherRollHistory(history);
 
             } catch (error) {
-                console.log(error);
+                return error;
             };
         }
     

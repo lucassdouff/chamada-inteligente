@@ -11,9 +11,10 @@ interface InputController {
     control: Control<FieldValues, any>;
     name: string;
     placeholder?: string;
+    testID?: string;
 }
 
-const Input = ({ control, name, placeholder }: InputController) => {
+const Input = ({ control, name, placeholder, testID }: InputController) => {
 
     const { field } = useController ({
         control,
@@ -22,7 +23,8 @@ const Input = ({ control, name, placeholder }: InputController) => {
     });
 
     return (
-        <TextInput 
+        <TextInput
+            testID={testID}
             placeholder={placeholder}
             underlineColorAndroid="transparent"
             className="px-2 py-0.5 border border-gray-400 rounded mb-4"
@@ -42,20 +44,24 @@ export default function LoginScreen() {
     const { handleSubmit, control } = useForm();
 
     const onSubmit = async (data: FieldValues) => {
+        try {
+            const response = await axios.get<UserSessionDTO>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/user/login`, {
+                params: {
+                    email: data.email,
+                    password: data.password
+            }});
+    
+            const user : UserSessionDTO | undefined = response?.data;
+    
+            setSession(user);
+    
+            if(user?.role === 'student') navigation.navigate('StudentDrawer');
+    
+            if(user?.role === 'teacher') navigation.navigate('TeacherDrawer');
 
-        const response = await axios.get<UserSessionDTO>(`http://${process.env.EXPO_PUBLIC_API_URL}:3000/user/login`, {
-            params: {
-                email: data.email,
-                password: data.password
-        }}).catch(error => {console.log(error.response.data)});
-
-        const user : UserSessionDTO | undefined = response?.data;
-
-        setSession(user);
-
-        if(user?.role === 'student') navigation.navigate('StudentDrawer');
-
-        if(user?.role === 'teacher') navigation.navigate('TeacherDrawer');
+        } catch (error) {
+            return error;
+        }
 
     }
 
@@ -65,10 +71,10 @@ export default function LoginScreen() {
             <Text className="self-center mb-10 text-xl">Acesso aos sistemas da UFF</Text>
 
             <Text className="mb-2">Identificação (idUFF)</Text>
-            <Input name='email' placeholder='CPF, email, passaporte' control={control} />
+            <Input testID='enrollment-input' name='email' placeholder='CPF, email, passaporte' control={control} />
             <Text className="mb-2">Senha</Text>
-            <Input name='password' control={control} />
-            <Button title="ACESSAR" onPress={handleSubmit(onSubmit)} />
+            <Input testID='password-input' name='password' control={control} />
+            <Button testID='login-button' title="ACESSAR" onPress={handleSubmit(onSubmit)} />
         </ScrollView>
     )
 }

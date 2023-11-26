@@ -43,7 +43,7 @@ export default function ManageClassScreen({ route }: NativeStackScreenProps<Stac
 
                 setClassStudentList(studentListMapped);
             } catch(error) {
-                console.log(error);
+                return error;
             }
             
         }

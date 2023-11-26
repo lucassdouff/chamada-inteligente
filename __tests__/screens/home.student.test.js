@@ -1,0 +1,24 @@
+import React from 'react';
+import { render } from '@testing-library/react-native';
+import HomeScreen from '../../src/app/screens/student/Home/Home';
+import { NavigationContext } from '@react-navigation/native';
+
+const navContext = {
+    isFocused: () => true,
+    addListener: jest.fn(() => jest.fn())
+}
+
+describe('Home screen should render correctly', () => {
+
+    it('student home renders correctly', async () => {
+        await expect(render(
+            <NavigationContext.Provider value={navContext}>
+                <HomeScreen />
+            </NavigationContext.Provider>
+        )).toBeTruthy();
+    });
+    
+    afterAll(async () => {
+        await new Promise(resolve => setTimeout(() => resolve(), 100)); // avoid jest open handle error
+    });
+});

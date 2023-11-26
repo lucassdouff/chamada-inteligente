@@ -54,7 +54,7 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
                 });
 
             } catch (error) {
-                console.log(error);
+                return error;
             };
         };
         
@@ -184,7 +184,7 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
                 });
 
             } catch (error) {
-                console.log(error);
+                return error;
             };
         }
 
@@ -194,14 +194,14 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
 
     useEffect(() => {
         async function requestLocationPermissionsAsync() {
-            const { granted } = await requestForegroundPermissionsAsync();
+            const result = await requestForegroundPermissionsAsync();
     
-            if(!granted) {
-                Alert.alert("Permissão de localização", "Para utilizar o aplicativo é necessário permitir o acesso a localização.");
-            } else {
+            if(result && result.status === 'granted') {
                 const location = await getCurrentPositionAsync();
     
                 setLocation(location);
+            } else {
+                Alert.alert("Permissão de localização", "Para utilizar o aplicativo é necessário permitir o acesso a localização.");
             }
         }
         
@@ -245,7 +245,7 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
                 setScheduledRollHistory(history);
 
             } catch (error) {
-                console.log(error);
+                return error;
             };
         }
     
