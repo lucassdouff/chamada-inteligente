@@ -13,7 +13,7 @@ jest.mock("@react-navigation/native", () => {
         dispatch: jest.fn(),
       }),
     };
-  });
+});
 
 jest.mock('../../src/core/controllers/NavigationController', ()=>{
     const actualNav = jest.requireActual('../../src/core/controllers/NavigationController');

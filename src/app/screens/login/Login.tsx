@@ -73,7 +73,7 @@ export default function LoginScreen() {
             <Text className="mb-2">Identificação (idUFF)</Text>
             <Input testID='enrollment-input' name='email' placeholder='CPF, email, passaporte' control={control} />
             <Text className="mb-2">Senha</Text>
-            <Input testID='password-input' name='password' control={control} />
+            <Input testID='password-input' name='password' placeholder='Digite sua senha' control={control} />
             <Button testID='login-button' title="ACESSAR" onPress={handleSubmit(onSubmit)} />
         </ScrollView>
     )
