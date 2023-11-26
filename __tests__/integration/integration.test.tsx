@@ -25,8 +25,9 @@ jest.mock('../../src/core/controllers/NavigationController', ()=>{
     };
 });
 
-describe('Integration Tests', () => {
-    it('tests the connection between all the components',async () => {
+describe('Login integration tests', () => {
+
+    it('tests the connection between all the login components',async () => {
 
         render(<LoginScreen />);
 
@@ -44,4 +45,5 @@ describe('Integration Tests', () => {
             expect(mockNavigate).toHaveBeenNthCalledWith(1  , "TeacherDrawer");
         })
     }); 
+
 });
