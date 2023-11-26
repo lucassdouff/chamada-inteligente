@@ -50,11 +50,11 @@ export default function LoginScreen() {
                     email: data.email,
                     password: data.password
             }});
-    
+            
             const user : UserSessionDTO | undefined = response?.data;
     
             setSession(user);
-    
+
             if(user?.role === 'student') navigation.navigate('StudentDrawer');
     
             if(user?.role === 'teacher') navigation.navigate('TeacherDrawer');

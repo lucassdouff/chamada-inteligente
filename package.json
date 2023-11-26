@@ -13,7 +13,8 @@
     "preset": "jest-expo",
     "transformIgnorePatterns": [
       "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)"
-    ]
+    ],
+    "setupFiles": ["<rootDir>/.jest/setEnvVars.js"]
   },
   "dependencies": {
     "@expo/webpack-config": "^19.0.0",
@@ -23,6 +24,7 @@
     "@react-navigation/native": "^6.1.8",
     "@react-navigation/native-stack": "^6.9.14",
     "@react-navigation/stack": "^6.3.18",
+    "@testing-library/react": "^14.1.2",
     "autoprefixer": "^10.4.16",
     "axios": "^1.6.0",
     "expo": "~49.0.12",
@@ -52,6 +54,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@testing-library/react-native": "^12.4.0",
+    "@types/jest": "^29.5.10",
     "@types/react": "~18.2.14",
     "@types/react-native-table-component": "^1.2.5",
     "@types/react-test-renderer": "^18.0.7",
