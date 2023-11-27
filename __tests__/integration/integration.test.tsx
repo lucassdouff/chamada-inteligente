@@ -30,14 +30,11 @@ describe('Login integration tests', () => {
     it('tests the connection between all the login components',async () => {
 
         render(<LoginScreen />);
-
-        const emailInput = screen.getByTestId('enrollment-input');
-        fireEvent.changeText(emailInput, 'paulo@email.com');
         
-        const passwordInput = screen.getByTestId('password-input');
-        fireEvent.changeText(passwordInput, '1232412');
-
         const button = screen.getByRole("button", { name: /acessar/i });
+        
+        fireEvent.changeText(screen.getByPlaceholderText('CPF, email, passaporte'), 'paulo@email.com');
+        fireEvent.changeText(screen.getByPlaceholderText('Digite sua senha'), '1232412');
 
         fireEvent.press(button);
 

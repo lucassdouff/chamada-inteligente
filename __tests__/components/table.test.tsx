@@ -1,11 +1,10 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
-import { fireEvent, render } from '@testing-library/react-native';
+import { fireEvent, render, screen } from '@testing-library/react-native';
 import TableComponent from '../../src/components/Tables/TableComponent';
 
 describe('Table component should render correctly and do some action', () => {
     it('renders correctly', () => {
-        const table = renderer.create(<TableComponent 
+        render(<TableComponent 
             tableData={[
                 [
                     {
@@ -29,14 +28,18 @@ describe('Table component should render correctly and do some action', () => {
                     }
                 ],
             ]}
-        />).toJSON();
+        />);
         
-        expect(table).toMatchSnapshot();
+        expect(screen.queryByText("Student 1")).toBeNull();
+        expect(screen.getByText("Student 2")).toBeTruthy();
+        expect(screen.getByText("Student 3")).toBeTruthy();
     });
 
     it('performs action on click', () => {
+
         const mockAction = jest.fn();
-        const { getByTestId } = render(<TableComponent 
+
+        render(<TableComponent 
             tableData={[
                 [
                     {
@@ -59,7 +62,8 @@ describe('Table component should render correctly and do some action', () => {
                 ],
             ]}
         />);
-        fireEvent.press(getByTestId('table-action'));
+        
+        fireEvent.press(screen.getByText("Student 3"));
         expect(mockAction).toHaveBeenCalled();
     });
 });

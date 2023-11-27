@@ -11,10 +11,9 @@ interface InputController {
     control: Control<FieldValues, any>;
     name: string;
     placeholder?: string;
-    testID?: string;
 }
 
-const Input = ({ control, name, placeholder, testID }: InputController) => {
+const Input = ({ control, name, placeholder }: InputController) => {
 
     const { field } = useController ({
         control,
@@ -24,7 +23,6 @@ const Input = ({ control, name, placeholder, testID }: InputController) => {
 
     return (
         <TextInput
-            testID={testID}
             placeholder={placeholder}
             underlineColorAndroid="transparent"
             className="px-2 py-0.5 border border-gray-400 rounded mb-4"
@@ -71,10 +69,10 @@ export default function LoginScreen() {
             <Text className="self-center mb-10 text-xl">Acesso aos sistemas da UFF</Text>
 
             <Text className="mb-2">Identificação (idUFF)</Text>
-            <Input testID='enrollment-input' name='email' placeholder='CPF, email, passaporte' control={control} />
+            <Input name='email' placeholder='CPF, email, passaporte' control={control} />
             <Text className="mb-2">Senha</Text>
-            <Input testID='password-input' name='password' placeholder='Digite sua senha' control={control} />
-            <Button testID='login-button' title="ACESSAR" onPress={handleSubmit(onSubmit)} />
+            <Input name='password' placeholder='Digite sua senha' control={control} />
+            <Button title="ACESSAR" onPress={handleSubmit(onSubmit)} />
         </ScrollView>
     )
 }
