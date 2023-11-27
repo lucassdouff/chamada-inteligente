@@ -260,15 +260,21 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
 
     useEffect(() => {
         async function getLocationPermissionsAsync() {
-            const result = await requestForegroundPermissionsAsync();
-    
-            if(result && result.status === 'granted') {
-                const location = await getCurrentPositionAsync();
-                
-                setLocation(location);
-            } else {
-                Alert.alert("Permissão de localização", "Para utilizar o aplicativo é necessário permitir o acesso a localização.");
-            }
+            await requestForegroundPermissionsAsync()
+                .then(async (result) => {
+                    if(result && result.status === 'granted') {
+                        await getCurrentPositionAsync()
+                            .then((location) => {
+                                setLocation(location);
+                            }).catch((error) => {
+                                return error;
+                            });
+                    } else {
+                        Alert.alert("Permissão de localização", "Para utilizar o aplicativo é necessário permitir o acesso a localização.");
+                    }}
+                ).catch((error) => {
+                    return error;
+                });
         }
 
         getLocationPermissionsAsync();
@@ -281,7 +287,9 @@ export default function ClassScreen({ route }: NativeStackScreenProps<StackParam
             distanceInterval: 1
         }, (location) => {
             setLocation(location);
-        })
+        }).catch((error) => {
+            return error;
+        });
     }, []);
 
     useEffect(() => {

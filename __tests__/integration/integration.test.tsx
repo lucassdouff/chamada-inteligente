@@ -25,6 +25,7 @@ jest.mock('../../src/core/controllers/NavigationController', ()=>{
     };
 });
 
+// the chamada-inteligente-server must be running to pass this test
 describe('Login integration tests', () => {
 
     it('tests the connection between all the login components',async () => {

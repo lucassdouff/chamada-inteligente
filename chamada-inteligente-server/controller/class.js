@@ -32,7 +32,7 @@ const getTeacherClasses = async(id_teacher) => {
                 id_class: classObj.id_class
             }
         });
-        console.log(weekdays, classObj)
+
         return {
             ...classObj.dataValues,
             class_weekdays: weekdays
@@ -180,9 +180,6 @@ exports.getClassStats = async (req, res, next) => {
 
         const [attendanceCount] = await sequelize.query(`select count(1) as count from attendance a join attendance_roll ar on ar.id_attendance_roll = a.id_attendance_roll where ar.id_class = ${id_class} and a.validation = true;`);
         const [attendanceRollCount] = await sequelize.query(`select count(1) as count from attendance_roll where id_class = ${id_class} and (end_datetime < now() or end_datetime is null) and start_datetime < now()`);
-
-
-        console.log()
 
         const result = {
             totalStudents: count,

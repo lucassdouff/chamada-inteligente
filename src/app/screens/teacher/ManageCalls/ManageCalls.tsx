@@ -194,15 +194,20 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
 
     useEffect(() => {
         async function requestLocationPermissionsAsync() {
-            const result = await requestForegroundPermissionsAsync();
-    
-            if(result && result.status === 'granted') {
-                const location = await getCurrentPositionAsync();
-    
-                setLocation(location);
-            } else {
-                Alert.alert("Permissão de localização", "Para utilizar o aplicativo é necessário permitir o acesso a localização.");
-            }
+            await requestForegroundPermissionsAsync().then(async (result) => {
+                if(result && result.status === 'granted') {
+                    await getCurrentPositionAsync().then((location) => {
+                        setLocation(location);
+                    }).catch((error) => {
+                        return error;
+                    });
+        
+                } else {
+                    Alert.alert("Permissão de localização", "Para utilizar o aplicativo é necessário permitir o acesso a localização.");
+                }
+            }).catch((error) => {
+                return error;
+            });
         }
         
         requestLocationPermissionsAsync();
@@ -215,7 +220,9 @@ export default function ManageCallsScreen({ route }: NativeStackScreenProps<Stac
             distanceInterval: 1
         }, (location) => {
             setLocation(location);
-        })
+        }).catch((error) => {
+            return error;
+        });
     }, []);
 
     useEffect(() => {

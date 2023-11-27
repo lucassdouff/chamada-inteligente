@@ -1,5 +1,5 @@
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Text, View, Image, Button, ScrollView } from "react-native";
+import { Text, View, Image, Button, ScrollView, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import axios from 'axios';
 import { Control, FieldValues, useController, useForm } from 'react-hook-form';
@@ -23,6 +23,7 @@ const Input = ({ control, name, placeholder }: InputController) => {
 
     return (
         <TextInput
+            secureTextEntry={name === 'password' ? true : false}
             placeholder={placeholder}
             underlineColorAndroid="transparent"
             className="px-2 py-0.5 border border-gray-400 rounded mb-4"
@@ -58,6 +59,7 @@ export default function LoginScreen() {
             if(user?.role === 'teacher') navigation.navigate('TeacherDrawer');
 
         } catch (error) {
+            Alert.alert('Erro', 'Usuário ou senha inválidos');
             return error;
         }
 
