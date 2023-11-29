@@ -17,3 +17,7 @@ Onde:
 Todo commit deve seguir o seguinte padrão:
 
 git commit -m "#{Nº de card} - {Descrição do commit}"
+
+## Link do drive com slides e arquivos úteis
+
+https://drive.google.com/drive/folders/11a7Gdl_EfRL3lMTHIf72XSAFgmDtNqh2?usp=sharing
